@@ -197,6 +197,7 @@ def main():
     html = (tpl.replace("{{FONT_CSS}}", font_css())
                .replace("{{LOGO_PNG}}", "data:image/png;base64," + b64(SRC / "assets" / "nextleap-mark.png"))
                .replace("{{UPTC_PNG}}", "data:image/png;base64," + b64(SRC / "assets" / "uptc-logo.png"))
+               .replace("{{QR_PNG}}", "data:image/png;base64," + b64(SRC / "assets" / "qr-taller.png"))
                .replace("{{ASISTENTES}}", js)
                .replace("{{PROMPTS}}", prompts))
     left = re.findall(r"\{\{[A-Z_]+\}\}", html)
