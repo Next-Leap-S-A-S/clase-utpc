@@ -1,0 +1,1150 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El derecho ya cambió, ¿y los abogados? | Next Leap</title>
+<meta name="description" content="Inteligencia artificial aplicada a la práctica jurídica. Material de clase de Next Leap para la UTPC.">
+<link rel="icon" href="{{LOGO_PNG}}">
+</head>
+<body>
+<style>
+{{FONT_CSS}}
+
+/* Sistema visual de nextleap-site, el mismo de Prompts RCI y Agentes Cortex.
+   Hero tipografico, sin fotografia. */
+:root{
+  --bg:#ffffff;
+  --bg-1:#fafafa;
+  --surface:rgba(0,0,0,.022);
+  --surface-h:rgba(0,0,0,.045);
+  --surface-2:rgba(0,0,0,.014);
+  --line:rgba(0,0,0,.09);
+  --line-h:rgba(0,0,0,.15);
+  --ink:#111114;
+  --ink75:#43444c;
+  --ink60:#5f6069;
+  --ink55:#6b6c75;
+  --ink45:#85868f;
+  --ink40:#8f9099;
+  --ink20:#c4c5cc;
+  --rol:#2563eb;
+  --ctx:#9333ea;
+  --ins:#db2777;
+  --ok:#16a34a;
+  --warn:#b45309;
+  --grad:linear-gradient(135deg,#2563eb,#9333ea,#db2777);
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:120px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+@media (max-width:640px){.wrap{padding:0 16px}}
+.code{font-family:var(--mono);font-size:10px;color:var(--ink40);letter-spacing:.02em}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:var(--ink60);margin:0}
+button{font-family:var(--sans)}
+
+/* Navbar flotante */
+.nav{position:fixed;top:8px;left:0;right:0;z-index:60}
+@media(min-width:640px){.nav{top:12px}}
+.navbar{position:relative;margin:0 auto;width:calc(100% - 1rem);max-width:1200px;border-radius:12px;
+  background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:inset 0 0 0 1px var(--line),0 1px 2px rgba(0,0,0,.04),0 14px 40px rgba(0,0,0,.09);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px}
+@media(min-width:640px){.navbar{padding:11px 20px}}
+.brand{display:flex;align-items:center;gap:9px;flex:none;font-size:13px;font-weight:600;letter-spacing:-.01em}
+.brand .code{color:var(--ink40)}
+.brand .mk{height:22px;width:auto;flex:none;display:block}
+.tabs-wrap{position:relative;min-width:0;flex:0 1 auto;display:flex;align-items:center}
+.navtabs{display:flex;align-items:center;gap:2px;overflow-x:auto;scroll-behavior:smooth;
+  scrollbar-width:thin;scrollbar-color:var(--ink20) transparent;padding-bottom:2px}
+.navtabs::-webkit-scrollbar{height:3px}
+.navtabs::-webkit-scrollbar-thumb{background:var(--ink20);border-radius:3px}
+.navtab{background:none;border:0;cursor:pointer;border-radius:6px;padding:6px 10px;
+  font-size:13px;font-weight:500;color:var(--ink45);white-space:nowrap;display:inline-flex;align-items:center;gap:6px;
+  transition:color .15s,background .15s;flex:none}
+.navtab:hover{color:var(--ink75);background:rgba(0,0,0,.04)}
+.navtab[aria-selected="true"]{color:var(--ink);background:rgba(0,0,0,.06)}
+.navtab .code{font-size:9.5px}
+.tabmore{position:absolute;right:0;top:0;bottom:2px;width:44px;border:0;cursor:pointer;
+  display:none;align-items:center;justify-content:flex-end;padding:0 4px 0 0;
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.96) 45%);
+  font-size:20px;line-height:1;color:var(--ink60);font-weight:500}
+.tabs-wrap.has-more .tabmore{display:flex}
+.tabmore.left{left:0;right:auto;justify-content:flex-start;padding:0 0 0 4px;
+  background:linear-gradient(270deg,rgba(255,255,255,0),rgba(255,255,255,.96) 45%)}
+.tabs-wrap.has-less .tabmore.left{display:flex}
+.tabs-wrap:not(.has-less) .tabmore.left{display:none}
+@media (max-width:900px){
+  .navbar{flex-wrap:wrap;gap:8px}
+  .tabs-wrap{flex:1 1 100%;width:100%}
+}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;gap:7px;cursor:pointer;border-radius:6px;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink60);
+  font-size:12px;font-weight:500;padding:7px 11px;
+  transition:background .15s,color .15s,border-color .15s}
+.btn:hover{background:var(--surface-h);color:var(--ink);border-color:var(--line-h)}
+.btn.solid{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:600}
+.btn.solid:hover{background:#2c2d35;color:#fff}
+.btn.sm{padding:4px 8px;font-size:11px}
+
+/* Hero tipografico */
+.hero{position:relative;padding:120px 0 44px;text-align:center;overflow:hidden;isolation:isolate}
+@media(max-width:900px){.hero{padding-top:150px}}
+.hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(38% 52% at 16% 32%,rgba(37,99,235,.17),transparent 70%),
+    radial-gradient(36% 50% at 84% 24%,rgba(147,51,234,.15),transparent 70%),
+    radial-gradient(44% 58% at 58% 92%,rgba(219,39,119,.13),transparent 72%),
+    var(--bg)}
+.hero-grid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.7;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(70% 62% at 50% 42%,#000 18%,transparent 76%);
+  mask-image:radial-gradient(70% 62% at 50% 42%,#000 18%,transparent 76%)}
+.hero-glyph{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
+  font-family:var(--mono);font-weight:500;font-size:clamp(120px,24vw,320px);line-height:1;letter-spacing:.06em;
+  white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(17,17,20,.07)}
+.hero-veil{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0) 70%,var(--bg) 100%)}
+.hero-in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:16px;
+  max-width:780px;margin:0 auto;padding:30px 22px 32px;border-radius:18px;
+  background:rgba(255,255,255,.7);
+  -webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.8);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 26px 70px -30px rgba(20,10,40,.35)}
+@media(min-width:768px){.hero-in{padding:38px 44px 40px}}
+h1{margin:0;font-size:clamp(1.9rem,5vw,3.2rem);font-weight:400;line-height:1.1;
+  letter-spacing:-.018em;max-width:22ch;text-wrap:balance}
+h1 .a{display:block;font-weight:500;color:var(--ink)}
+h1 .b{display:block;margin-top:11px;color:var(--ink55)}
+.hero p.sub{margin:0;max-width:60ch;color:var(--ink60);font-size:15px;line-height:1.65}
+.rci-strip{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.rci-pill{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.8);color:var(--ink60)}
+.rci-pill b{font-weight:500}
+.rci-pill.r b{color:var(--rol)}
+.rci-pill.c b{color:var(--ctx)}
+.rci-pill.i b{color:var(--ins)}
+
+/* Paneles */
+.panel{padding:38px 0 20px}
+.panel[hidden]{display:none}
+.sechead{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;max-width:68ch}
+.sechead h2{margin:0;font-size:26px;font-weight:500;letter-spacing:-.02em;line-height:1.2}
+.sechead p{margin:0;color:var(--ink55);font-size:14.5px;line-height:1.65}
+.subhead{margin-top:40px}
+.subhead h2{font-size:21px}
+
+/* Metodo RCI */
+.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:860px){.method-grid{grid-template-columns:1fr}}
+.mcard{position:relative;border:1px solid var(--line);background:var(--bg);border-radius:8px;
+  padding:18px;display:flex;flex-direction:column;gap:11px;overflow:hidden;min-width:0}
+.mcard::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--mc,var(--ink20))}
+.mcard[data-k="rol"]{--mc:var(--rol)}
+.mcard[data-k="ctx"]{--mc:var(--ctx)}
+.mcard[data-k="ins"]{--mc:var(--ins)}
+.mcard-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mcard-top .code{color:var(--mc,var(--ink40));font-weight:500}
+.mcard h3{margin:0;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.mcard .q{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink60)}
+.mcard .ex{margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--ink75);
+  background:var(--surface);border-left:2px solid var(--mc,var(--ink20));padding:9px 11px;border-radius:0 4px 4px 0}
+.mcard .fail{margin:0;font-size:12.5px;line-height:1.5;color:var(--ink45)}
+.mcard .fail b{color:var(--ink60);font-weight:600}
+.mcard ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6;color:var(--ink75)}
+.mcard ul li{margin-bottom:4px}
+
+/* Grillas */
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:960px){.grid3{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* Prosa */
+.prose{max-width:70ch;display:flex;flex-direction:column;gap:14px}
+.prose p{margin:0;font-size:15px;line-height:1.75;color:var(--ink75)}
+.prose p b{color:var(--ink);font-weight:600}
+.callout{border:1px solid var(--line);border-left:3px solid var(--ink);background:var(--surface-2);
+  border-radius:0 8px 8px 0;padding:14px 16px;font-size:14px;line-height:1.65;color:var(--ink75);max-width:78ch}
+.callout b{color:var(--ink)}
+.callout.warn{border-left-color:var(--warn)}
+
+/* Caja / checklist */
+.box{border:1px solid var(--line);background:var(--bg);border-radius:8px;overflow:hidden;margin-bottom:18px;min-width:0}
+.boxhead{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);background:var(--surface-2)}
+.boxhead h4{margin:0;font-size:13.5px;font-weight:600}
+.klist{list-style:none;margin:0;padding:6px 0}
+.klist li{display:flex;gap:10px;align-items:flex-start;padding:8px 14px;font-size:13.5px;line-height:1.5}
+.klist input{margin:3px 0 0;accent-color:var(--rol);flex:none;width:15px;height:15px;cursor:pointer}
+.klist label{cursor:pointer;color:var(--ink75)}
+.klist input:checked + label{color:var(--ink40);text-decoration:line-through}
+.pvfoot{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  border-top:1px solid var(--line);background:var(--surface-2)}
+.verdict{font-size:13px;color:var(--ink60);font-weight:500}
+.meter{height:4px;background:var(--surface-h);border-radius:4px;overflow:hidden;flex:1;min-width:120px;max-width:260px}
+.meter i{display:block;height:100%;width:0;background:var(--grad);transition:width .25s}
+
+/* Ingredientes y recetas */
+.ing .mcard.hl{border-color:var(--line-h);box-shadow:0 12px 30px -18px rgba(0,0,0,.25)}
+.ing .mcard.hl::before{background:var(--grad)}
+.rcidet summary{cursor:pointer;padding:12px 18px;font-size:13px;font-weight:600;color:var(--ink60)}
+.rcidet summary:hover{color:var(--ink)}
+.rcidet[open] summary{border-bottom:1px solid var(--line)}
+
+/* Test interactivo */
+.quiz .boxhead{padding:9px 14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;padding:2px;background:var(--bg)}
+.segb{border:0;background:none;cursor:pointer;font-size:12px;font-weight:500;color:var(--ink45);padding:5px 10px;border-radius:5px}
+.segb[aria-selected="true"]{background:var(--ink);color:#fff}
+.qzpane{padding:20px 18px 22px}
+.qzpane[hidden],.qzrun[hidden],.qzres[hidden],.qzstart[hidden]{display:none}
+.qzstart{display:flex;flex-direction:column;gap:10px;max-width:560px}
+.qzstart label{font-size:14px;font-weight:600;color:var(--ink75)}
+.qzstart input{font-family:var(--sans);font-size:14px;padding:10px 12px;border:1px solid var(--line);border-radius:6px;color:var(--ink)}
+.qzstart input:focus{outline:2px solid var(--rol);border-color:transparent}
+.qzstart .btn{align-self:flex-start}
+.qzprog{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.qzprog .meter{max-width:none}
+.qzq{margin:0;font-size:20px;line-height:1.4;font-weight:500;letter-spacing:-.01em;max-width:40ch;animation:fade .25s ease-out both}
+.qzhint{margin:8px 0 0;font-size:13.5px;color:var(--ink55);line-height:1.6;max-width:62ch}
+.qzbtns{display:flex;gap:8px;align-items:center;margin-top:18px;flex-wrap:wrap}
+.qzbtns .sp{flex:1}
+.qzyes,.qzno{min-width:92px;justify-content:center;font-size:14px;padding:9px 16px}
+.qzyes:hover{border-color:var(--ok);color:var(--ok)}
+.qzres{display:flex;gap:22px;align-items:flex-start;animation:fade .3s ease-out both}
+@media (max-width:640px){.qzres{flex-direction:column;gap:14px}}
+.qzscore{flex:none;width:96px;height:96px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:conic-gradient(var(--c,var(--ink)) calc(var(--p,0)*1%),var(--surface-h) 0);position:relative}
+.qzscore::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--bg)}
+.qzscore span,.qzscore small{position:relative}
+.qzscore span{font-size:28px;font-weight:600;line-height:1}
+.qzscore small{font-size:11px;color:var(--ink45);font-family:var(--mono)}
+.qzresbody{display:flex;flex-direction:column;gap:8px;min-width:0}
+.qzresbody h3{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+.qzresbody p{margin:0;font-size:14px;color:var(--ink75);line-height:1.65;max-width:62ch}
+.qzacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.qzintro{margin:0 0 14px;font-size:14px;color:var(--ink60);display:flex;gap:10px;flex-wrap:wrap;align-items:baseline;justify-content:space-between}
+.cases{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px}
+@media (max-width:760px){.cases{grid-template-columns:1fr}}
+.case{border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s}
+.case.ok{border-color:rgba(22,163,74,.45)}
+.case.bad{border-color:rgba(180,83,9,.45)}
+.case p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink75)}
+.case .opts{display:flex;gap:6px;flex-wrap:wrap}
+.case .opts .btn[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.case .opts .btn.right{background:rgba(22,163,74,.1);border-color:rgba(22,163,74,.5);color:var(--ok)}
+.case .why{font-size:12.5px;color:var(--ink60);line-height:1.55;animation:fade .25s ease-out both}
+.case .why b{color:var(--ink)}
+.case.ok .why b{color:var(--ok)}
+.case.bad .why b{color:var(--warn)}
+.quiz .pvfoot{margin:0 -18px -22px}
+
+/* Comparacion chat / asistente / agente */
+.cmp .mcard .tag{font-family:var(--mono);font-size:10.5px;color:var(--ink45)}
+.cmp .mcard.hl{border-color:var(--line-h);box-shadow:0 12px 30px -18px rgba(0,0,0,.25)}
+.cmp .mcard.hl::before{background:var(--grad)}
+
+/* Anatomia */
+.anat .mcard{--mc:var(--ink)}
+.anat .mcard .code.big{font-size:12px}
+.rcimini{display:flex;flex-direction:column;gap:6px}
+.rcimini div{font-size:13px;line-height:1.55;color:var(--ink75);padding-left:10px;border-left:2px solid var(--c)}
+.rcimini b{font-weight:600;color:var(--ink)}
+
+/* Plataformas */
+.plat .mcard h3{font-size:16px}
+.plat dl{margin:0;display:grid;grid-template-columns:1fr;gap:8px}
+.plat dt{font-family:var(--mono);font-size:10.5px;color:var(--ink45);letter-spacing:.02em}
+.plat dd{margin:0;font-size:13px;line-height:1.6;color:var(--ink75)}
+.maptable{width:100%;border-collapse:collapse;font-size:13px}
+.maptable th,.maptable td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top;line-height:1.55}
+.maptable th{font-family:var(--mono);font-size:10.5px;font-weight:500;color:var(--ink45);background:var(--surface-2);border-top:0}
+.maptable td:first-child{font-weight:600;color:var(--ink);width:28%}
+.maptable td{color:var(--ink75)}
+@media (max-width:640px){
+  .maptable thead{display:none}
+  .maptable tr{display:block;border-top:1px solid var(--line);padding:8px 0}
+  .maptable td{display:block;border:0;padding:4px 12px;width:auto}
+  .maptable td:first-child{width:auto}
+}
+
+/* Pasos */
+.steplist{display:flex;flex-direction:column}
+.steprow{display:flex;gap:16px;align-items:flex-start;padding:22px 0;border-top:1px solid var(--line)}
+.steplist .steprow:first-child{border-top:none;padding-top:4px}
+.stepmark{flex:none;width:40px}
+.stepnum{font-family:var(--mono);font-size:19px;font-weight:600;color:var(--ink20);line-height:1}
+.stepbody{flex:1;min-width:0}
+.stepbody h3{margin:0 0 6px;font-size:16px;font-weight:600;letter-spacing:-.01em}
+.stepbody p{margin:0 0 8px;font-size:14px;color:var(--ink75);line-height:1.65}
+.stepbody p:last-child{margin-bottom:0}
+.sublist{margin:6px 0 0;padding-left:18px;font-size:13.5px;color:var(--ink60);line-height:1.65}
+.sublist li{margin-bottom:3px}
+
+/* Asistentes */
+.asel{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.achip{cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 10px;
+  font-size:12.5px;font-weight:500;color:var(--ink60);display:inline-flex;gap:7px;align-items:baseline;text-align:left;
+  transition:background .15s,color .15s,border-color .15s;max-width:100%}
+.achip:hover{background:var(--surface-h);border-color:var(--line-h);color:var(--ink)}
+.achip .code{font-size:9.5px}
+.achip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.achip[aria-pressed="true"] .code{color:rgba(255,255,255,.6)}
+.adetail{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg);animation:fade .25s ease-out both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ahead{padding:18px 18px 16px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,var(--surface-2),transparent)}
+.ahead .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ahead .area{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:600;color:var(--ink55)}
+.ahead h3{margin:0;font-size:20px;font-weight:600;letter-spacing:-.015em;line-height:1.3}
+.ahead p{margin:0;font-size:14px;color:var(--ink60);line-height:1.6;max-width:75ch}
+.ahead .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.rciblk{padding:14px 18px 16px;border-bottom:1px solid var(--line)}
+.rciblk .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;display:block;margin-bottom:8px;color:var(--c)}
+.rciblk .txt{margin:0;font-family:var(--mono);font-size:12px;line-height:1.75;white-space:pre-wrap;word-wrap:break-word;
+  overflow-wrap:anywhere;color:var(--ink75);border-left:2px solid var(--c);padding:2px 0 2px 12px}
+.rciblk[data-k="rol"]{--c:var(--rol)}
+.rciblk[data-k="ctx"]{--c:var(--ctx)}
+.rciblk[data-k="ins"]{--c:var(--ins)}
+.aextra{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--line)}
+@media (max-width:900px){.aextra{grid-template-columns:1fr}}
+.aextra section{padding:14px 18px 18px;border-right:1px solid var(--line);min-width:0}
+.aextra section:last-child{border-right:0}
+@media (max-width:900px){.aextra section{border-right:0;border-bottom:1px solid var(--line)}.aextra section:last-child{border-bottom:0}}
+.aextra h4{margin:0 0 10px;font-size:13px;font-weight:600}
+.aextra ol,.aextra ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6;color:var(--ink75)}
+.aextra li{margin-bottom:7px}
+.ptest{display:flex;flex-direction:column;gap:5px}
+.ptest .btn{align-self:flex-start}
+.anav{display:flex;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}
+
+.anon{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:700px){.anon{grid-template-columns:1fr}}
+.anon pre{margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;
+  padding:12px;border-radius:6px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink75)}
+.anon .code{display:block;margin-bottom:6px}
+
+/* Navegacion entre secciones */
+.pnav{display:flex;justify-content:space-between;gap:10px;margin-top:36px;padding-top:18px;border-top:1px solid var(--line);flex-wrap:wrap}
+.pnav .btn{font-size:12.5px}
+.pnav .sp{flex:1}
+
+footer{margin-top:40px;border-top:1px solid var(--line);padding:26px 0 48px;display:flex;gap:20px;
+  justify-content:space-between;flex-wrap:wrap;align-items:flex-start}
+.footmark{height:30px;width:auto;display:block;opacity:.85;margin-bottom:12px}
+.note{max-width:62ch;font-size:12px;color:var(--ink45);line-height:1.65;margin:0}
+.note strong{color:var(--ink60);font-weight:600}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);opacity:0;pointer-events:none;
+  background:var(--ink);color:#fff;font-size:12.5px;font-weight:500;padding:9px 16px;border-radius:6px;
+  box-shadow:0 20px 50px rgba(0,0,0,.3);z-index:80;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+:focus-visible{outline:2px solid var(--rol);outline-offset:2px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media print{
+  .nav,.pnav,.toast,.btn,.tabmore{display:none!important}
+  .panel[hidden]{display:block!important}
+  .hero{padding-top:20px}
+}
+
+/* Laboratorio */
+.labbox{border:1px solid var(--line);border-radius:10px;margin:14px 0;overflow:hidden;background:var(--bg)}
+.labbox.prompt{border-color:var(--line-h)}
+.labhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.labhead h4{margin:0;font-size:13.5px;font-weight:600}
+.labbox pre{margin:0;padding:14px;font-family:var(--mono);font-size:11.5px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink75)}
+.labbox .observar{margin:0;padding:10px 14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink60)}
+.labbox .observar b{color:var(--ink)}
+</style>
+
+<div class="nav">
+  <div class="navbar">
+    <div class="brand"><img class="mk" src="{{LOGO_PNG}}" alt="Next Leap" width="22" height="21"><span class="code">/clase-utpc</span>IA aplicada</div>
+    <div class="tabs-wrap" id="tabswrap">
+      <button class="tabmore left" id="tabless" type="button" aria-label="Ver secciones anteriores" tabindex="-1">&lsaquo;</button>
+      <div class="navtabs" role="tablist" id="navtabs" aria-label="Secciones">
+        <button class="navtab" role="tab" data-t="cambio" aria-selected="true"><span class="code">/1</span>El cambio</button>
+        <button class="navtab" role="tab" data-t="metodo" aria-selected="false"><span class="code">/2</span>Método RCI</button>
+        <button class="navtab" role="tab" data-t="laboratorio" aria-selected="false"><span class="code">/3</span>Laboratorio</button>
+        <button class="navtab" role="tab" data-t="asistentes" aria-selected="false"><span class="code">/4</span>Asistentes</button>
+        <button class="navtab" role="tab" data-t="servir" aria-selected="false"><span class="code">/5</span>Antes de servir</button>
+      </div>
+      <button class="tabmore" id="tabmore" type="button" aria-label="Ver más secciones" tabindex="-1">&rsaquo;</button>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-glyph" aria-hidden="true">R&middot;C&middot;I</div>
+  <div class="hero-veil" aria-hidden="true"></div>
+  <div class="wrap"><div class="hero-in">
+    <p class="eyebrow">/clase &middot; UTPC &middot; 2 horas</p>
+    <h1>
+      <span class="a">El derecho ya cambió, ¿y los abogados?</span>
+      <span class="b">Inteligencia artificial aplicada. La herramienta redacta. El criterio y la firma siguen siendo suyos.</span>
+    </h1>
+    <p class="sub">Guía de clase para abogados en ejercicio y estudiantes de posgrado. Qué cambió, cómo se pide bien, diez prompts para practicar y cómo se verifica antes de firmar.</p>
+    <div class="rci-strip" aria-hidden="true">
+      <span class="rci-pill r"><b>R</b> rol</span>
+      <span class="rci-pill c"><b>C</b> contexto</span>
+      <span class="rci-pill i"><b>I</b> instrucción</span>
+      <span class="rci-pill"><b>10</b> prompts</span>
+    </div>
+  </div></div>
+</header>
+
+<main class="wrap">
+
+  <!-- /1 EL CAMBIO -->
+  <section class="panel" id="p-cambio" data-title="El cambio">
+    <div class="sechead">
+      <p class="eyebrow">/el-cambio</p>
+      <h2>La herramienta ya está en el despacho, en el juzgado y en la oficina del cliente</h2>
+      <p>Esta sección reúne hechos que se pueden comprobar. Cada uno trae su fuente. Lo que no pudimos confirmar queda marcado al final.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="mcard">
+        <div class="mcard-top"><span class="code">/nueva york &middot; 2023</span></div>
+        <h3>Mata contra Avianca</h3>
+        <p class="q">En junio de 2023 el juez Kevin Castel, del Distrito Sur de Nueva York, sancionó con 5.000 dólares a los abogados de un demandante y a su firma. Habían presentado un escrito con opiniones judiciales inexistentes, generadas con ChatGPT, y siguieron defendiéndolas cuando el tribunal preguntó por ellas.</p>
+        <p class="fail"><b>Lo que enseña:</b> el juez no prohibió la IA. Sancionó la falta de verificación y la falta de franqueza ante el tribunal.</p>
+        <p class="fail"><span class="code">Fuente: decisión del 22 de junio de 2023, 678 F. Supp. 3d 443</span></p>
+      </div>
+      <div class="mcard">
+        <div class="mcard-top"><span class="code">/colombia &middot; 2024</span></div>
+        <h3>Sentencia T-323 de 2024</h3>
+        <p class="q">La Corte Constitucional revisó una tutela en la que un juez de segunda instancia usó ChatGPT para ampliar la motivación de su fallo. La Corte concluyó que no sustituyó la función judicial porque la decisión ya estaba tomada. Advirtió, eso sí, que no se cumplieron a cabalidad los principios de transparencia y responsabilidad.</p>
+        <p class="fail"><b>Lo que enseña:</b> la IA puede apoyar tareas como sintetizar o corregir textos, siempre con supervisión humana y sin reemplazar lo que no se puede delegar.</p>
+        <p class="fail"><span class="code">Fuente: expediente T-9.301.656 y ABC de la Judicatura</span></p>
+      </div>
+      <div class="mcard">
+        <div class="mcard-top"><span class="code">/rama judicial &middot; 2024</span></div>
+        <h3>Acuerdo PCSJA24-12243</h3>
+        <p class="q">El 16 de diciembre de 2024 el Consejo Superior de la Judicatura adoptó lineamientos para el uso responsable, seguro y ético de la inteligencia artificial en la Rama Judicial. Según la propia Rama, exigen verificar la fiabilidad de la herramienta y declarar su uso en actuaciones y decisiones.</p>
+        <p class="fail"><b>Lo que enseña:</b> el juez que lo reciba a usted escrito con IA trabaja bajo reglas propias de transparencia. Esas reglas se van a esperar también de quien litiga.</p>
+        <p class="fail"><span class="code">Fuente: Rama Judicial, UTDI</span></p>
+      </div>
+      <div class="mcard">
+        <div class="mcard-top"><span class="code">/datos &middot; 2012</span></div>
+        <h3>Ley 1581 de 2012</h3>
+        <p class="q">Pegar en una herramienta de IA el nombre, la cédula o el historial de un cliente es tratar datos personales. La ley no cambió. Lo que cambió es lo fácil que resulta incumplirla con un clic.</p>
+        <p class="fail"><b>Lo que enseña:</b> antes de la herramienta viene la autorización, la finalidad y la anonimización.</p>
+        <p class="fail"><span class="code">Fuente: texto de la ley, verificar versión vigente</span></p>
+      </div>
+    </div>
+
+    <div class="sechead subhead">
+      <p class="eyebrow">/tesis-de-la-clase</p>
+      <h2>Qué cambió para el abogado y qué no</h2>
+    </div>
+    <div class="grid3">
+      <div class="mcard">
+        <div class="mcard-top"><span class="code">/cambió</span></div>
+        <h3>El borrador ya no cuesta</h3>
+        <p class="q">Un primer texto de contrato, derecho de petición o cronología aparece en segundos. Eso presiona los honorarios por tiempo y las expectativas del cliente.</p>
+      </div>
+      <div class="mcard">
+        <div class="mcard-top"><span class="code">/cambió</span></div>
+        <h3>Verificar es el trabajo</h3>
+        <p class="q">El valor se desplaza de escribir a comprobar. Quien no verifica produce casos como el de Nueva York.</p>
+      </div>
+      <div class="mcard hl">
+        <div class="mcard-top"><span class="code">/no cambió</span></div>
+        <h3>La responsabilidad es suya</h3>
+        <p class="q">La firma, el secreto profesional y la decisión siguen en cabeza del abogado. Ninguna herramienta responde ante el cliente ni ante el tribunal disciplinario.</p>
+      </div>
+    </div>
+
+    <div class="box" style="margin-top:18px">
+      <div class="boxhead"><h4>Para discutir en clase</h4></div>
+      <ul class="klist">
+        <li><label>¿Qué tarea de su semana toma tres horas y un asistente la dejaría en veinte minutos de revisión?</label></li>
+        <li><label>¿Qué le diría a un cliente que pregunta si usted usa inteligencia artificial para su caso?</label></li>
+        <li><label>¿Dónde está la línea entre apoyarse en la herramienta y delegarle el criterio?</label></li>
+      </ul>
+    </div>
+
+    <div class="callout warn" style="margin-top:18px"><b>Pendiente de confirmar antes de citar en público.</b> El número exacto de casos falsos en el escrito de Mata contra Avianca varía según la fuente, así que la clase no da cifra. Tampoco confirmamos la fecha exacta de la T-323 ni el artículo preciso del Acuerdo PCSJA24-12243 que exige declarar el uso. Revíselos en los textos oficiales. No presentamos casos colombianos de sanción por citas falsas porque no verificamos ninguno.</div>
+  </section>
+
+  <!-- /2 METODO -->
+  <section class="panel" id="p-metodo" data-title="Método RCI" hidden>
+    <div class="sechead">
+      <p class="eyebrow">/método-rci</p>
+      <h2>Rol, Contexto, Instrucción</h2>
+      <p>Tres piezas que convierten una petición vaga en un encargo de trabajo. Es la misma estructura que usa un socio cuando delega a un asociado.</p>
+    </div>
+
+    <div class="method-grid">
+      <div class="mcard" data-k="rol">
+        <div class="mcard-top"><span class="code">/rol</span></div>
+        <h3>Quién es la herramienta</h3>
+        <p class="q">La posición profesional desde la que responde y el criterio que aplica.</p>
+        <p class="ex">Abogado de contratos en Colombia, preventivo, que escribe en registro formal.</p>
+      </div>
+      <div class="mcard" data-k="ctx">
+        <div class="mcard-top"><span class="code">/contexto</span></div>
+        <h3>Qué sabe del caso</h3>
+        <p class="q">A quién representa usted, qué documentos hay, qué norma aplica y qué le preocupa.</p>
+        <p class="ex">Represento al contratista. El contrato es de prestación de servicios y temo que lo declaren laboral.</p>
+      </div>
+      <div class="mcard" data-k="ins">
+        <div class="mcard-top"><span class="code">/instrucción</span></div>
+        <h3>Qué debe entregar</h3>
+        <p class="q">Los pasos, el formato de salida y los límites, incluida la regla de no inventar.</p>
+        <p class="ex">Tabla con cláusula, riesgo y redacción alternativa. Cada cita lleva la marca (por verificar).</p>
+      </div>
+    </div>
+
+    <div class="sechead subhead">
+      <p class="eyebrow">/antes-y-después</p>
+      <h2>La misma tarea, dos maneras de pedirla</h2>
+    </div>
+    <div class="box">
+      <div class="anon" style="padding:14px">
+        <div><span class="code">/antes</span><pre>Revisa este contrato y dime si está bien.
+
+[contrato pegado]</pre></div>
+        <div><span class="code">/después</span><pre>ROL
+Actúa como abogado de contratos en Colombia, con criterio preventivo. Escribes en registro formal y con frases cortas.
+
+CONTEXTO
+Represento al contratista [PARTE-1]. El contrato es de prestación de servicios con [PARTE-2]. Me preocupa que la relación pueda considerarse laboral.
+
+INSTRUCCIÓN
+1. Si falta un dato para revisar, pregunta antes de continuar.
+2. Señala indicios de subordinación.
+3. Entrega una tabla: cláusula, hallazgo, riesgo (alto, medio, bajo) y redacción alternativa.
+4. Marca cada cita de norma o sentencia con (por verificar). No inventes citas.
+
+[contrato pegado]</pre></div>
+      </div>
+      <div class="pvfoot"><span class="verdict">El segundo pedido se revisa en minutos porque el formato es fijo y las dudas se declaran.</span></div>
+    </div>
+
+    <div class="box">
+      <div class="boxhead"><h4>Cuatro hábitos que valen más que cualquier truco</h4></div>
+      <ul class="klist">
+        <li><label>Pida que pregunte antes de suponer. Una herramienta que no pregunta rellena los vacíos con invenciones.</label></li>
+        <li><label>Exija la marca (por verificar) en toda cita de norma o sentencia.</label></li>
+        <li><label>Fije el formato de salida. Una tabla se revisa más rápido que un párrafo.</label></li>
+        <li><label>Entregue datos anonimizados con marcadores como [PARTE-1] y [RADICADO-1].</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- /3 LABORATORIO -->
+  <section class="panel" id="p-laboratorio" data-title="Laboratorio" hidden>
+    <div class="sechead">
+      <p class="eyebrow">/laboratorio</p>
+      <h2>Cuatro ejercicios, diez prompts</h2>
+      <p>Elija un ejercicio, copie el material ficticio y luego cada prompt en la herramienta aprobada por su organización. Compare el resultado con lo que debería observar. Todos los nombres, cifras y radicados son inventados.</p>
+    </div>
+    <div class="asel" id="lsel" role="group" aria-label="Ejercicios del laboratorio"></div>
+    <div id="ldetail"></div>
+  </section>
+
+  <!-- /4 ASISTENTES -->
+  <section class="panel" id="p-asistentes" data-title="Asistentes" hidden>
+    <div class="sechead">
+      <p class="eyebrow">/asistentes</p>
+      <h2>Cuando el prompt se repite, se guarda como asistente</h2>
+      <p>Un asistente personalizado es un chat que ya sabe cómo trabaja usted. Las instrucciones, los documentos de apoyo y el formato quedan guardados. Sirve cuando la tarea se repite, la hacen varias personas y existe un método que debería ser el mismo siempre.</p>
+    </div>
+    <div class="callout">Se crea en Claude (Proyectos), ChatGPT (GPT personalizados), Gemini (Gems) y Microsoft 365 Copilot (agentes). El nombre cambia y la receta es la misma. Los nombres y planes de cada producto cambian con frecuencia, así que confirme en la plataforma.</div>
+    <div class="sechead subhead">
+      <p class="eyebrow">/tres-recetas</p>
+      <h2>Tres asistentes listos para copiar y adaptar</h2>
+      <p>Copie las instrucciones, cárguelas con los documentos sugeridos y pruébelas con los tres mensajes. Los textos entre corchetes se reemplazan con los datos de su práctica.</p>
+    </div>
+    <div class="asel" id="asel" role="group" aria-label="Recetas de ejemplo"></div>
+    <div id="adetail"></div>
+  </section>
+
+  <!-- /5 ANTES DE SERVIR -->
+  <section class="panel" id="p-servir" data-title="Antes de servir" hidden>
+    <div class="sechead">
+      <p class="eyebrow">/antes-de-servir</p>
+      <h2>La salida es un borrador. La firma es del abogado.</h2>
+      <p>La herramienta redacta, ordena y señala. No conoce el expediente completo, no responde ante el cliente y no firma. <b>Si no hay tiempo para verificar, no hay tiempo para usar el borrador.</b></p>
+    </div>
+
+    <div class="grid2">
+      <div class="mcard">
+        <div class="mcard-top"><span class="code">/secreto profesional</span></div>
+        <h3>El deber sigue intacto</h3>
+        <p class="q">El artículo 74 de la Constitución hace inviolable el secreto profesional y la Ley 1123 de 2007 impone el deber de guardarlo. Antes de cargar información de un cliente, evalúe si esa entrega es compatible con ese deber.</p>
+      </div>
+      <div class="mcard">
+        <div class="mcard-top"><span class="code">/datos personales</span></div>
+        <h3>Cargar datos también es tratarlos</h3>
+        <p class="q">Nombres, cédulas o historias clínicas son datos personales en los términos de la Ley 1581 de 2012. Use casos anonimizados y herramientas aprobadas por su firma o entidad.</p>
+      </div>
+    </div>
+
+    <div class="box" style="margin-top:18px">
+      <div class="boxhead"><h4>Anonimizar con marcadores</h4></div>
+      <div class="anon" style="padding:14px">
+        <div><span class="code">/antes</span><pre>La señora María Pérez, identificada con C.C. 52.123.456, demandó a Comercializadora Andina S.A.S., NIT 900.123.456-7, en el proceso 11001310300120230012300.</pre></div>
+        <div><span class="code">/después</span><pre>[DEMANDANTE], identificada con [CC-1], demandó a [SOCIEDAD-1], identificada con [NIT-1], en el proceso [RADICADO-1].</pre></div>
+      </div>
+      <div class="pvfoot"><span class="verdict">Los nombres del ejemplo son ficticios.</span></div>
+    </div>
+
+    <div class="box">
+      <div class="boxhead"><h4>Antes de entregar un trabajo hecho con IA</h4><button class="btn sm" id="chk-reset" type="button">Reiniciar</button></div>
+      <ul class="klist" id="chklist">
+        <li><input type="checkbox" id="k1"><label for="k1">Cada norma citada se leyó en su texto vigente, en una fuente oficial.</label></li>
+        <li><input type="checkbox" id="k2"><label for="k2">Cada sentencia citada existe, dice lo que se afirma y se encontró en una base de datos o en el sitio de la Corte.</label></li>
+        <li><input type="checkbox" id="k3"><label for="k3">Los hechos del texto coinciden con el expediente y con lo que el cliente informó.</label></li>
+        <li><input type="checkbox" id="k4"><label for="k4">No se cargaron nombres, cédulas, radicados ni información reservada. Se usaron marcadores.</label></li>
+        <li><input type="checkbox" id="k5"><label for="k5">La plataforma y la cuenta son las aprobadas, con la privacidad revisada: uso para entrenamiento, conservación y lugar de procesamiento.</label></li>
+        <li><input type="checkbox" id="k6"><label for="k6">El texto se releyó completo y refleja el criterio del abogado y no una simple salida de la herramienta.</label></li>
+        <li><input type="checkbox" id="k7"><label for="k7">Si el tribunal o el cliente exigen declarar el uso de IA, se declaró.</label></li>
+        <li><input type="checkbox" id="k8"><label for="k8">El abogado responsable revisó, decidió y firmó.</label></li>
+      </ul>
+      <div class="pvfoot"><span class="meter" aria-hidden="true"><i id="chkbar"></i></span><span class="verdict" id="chkverdict">0 de 8 puntos verificados.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <div>
+    <img class="footmark" src="{{LOGO_PNG}}" alt="Next Leap" width="31" height="30">
+    <p class="note"><strong>Next Leap</strong> &middot; Clase para abogados, UTPC<br>El derecho ya cambió, ¿y los abogados? Inteligencia artificial aplicada<br><span class="code">5 secciones / 10 prompts / 3 asistentes</span></p>
+  </div>
+  <p class="note">Material educativo. Los ejemplos son modelos de trabajo y no constituyen asesoría jurídica. Las normas y decisiones mencionadas deben verificarse en su versión oficial vigente. Los productos mencionados pertenecen a sus respectivos titulares y sus funciones cambian con el tiempo.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+{{ASISTENTES}}
+
+(function(){
+  "use strict";
+
+  /* ---------- utilidades ---------- */
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove("show"); }, 1900);
+  }
+  function copyText(text, okMsg){
+    function fallback(){
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-1000px";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      toast(ok ? okMsg : "Seleccione y copie el texto manualmente");
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function(){ toast(okMsg); }, fallback);
+    } else {
+      fallback();
+    }
+  }
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function words(s){
+    var m = String(s).trim().match(/\S+/g);
+    return m ? m.length : 0;
+  }
+  var store = {
+    get: function(k){ try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+    set: function(k, v){ try { window.localStorage.setItem(k, v); } catch (e) {} }
+  };
+
+  /* ---------- pestanas ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".navtab"));
+  var order = tabs.map(function(t){ return t.getAttribute("data-t"); });
+  var panels = {};
+  order.forEach(function(k){ panels[k] = document.getElementById("p-" + k); });
+  var navtabs = document.getElementById("navtabs");
+  var tabswrap = document.getElementById("tabswrap");
+
+  function updateHint(){
+    var max = navtabs.scrollWidth - navtabs.clientWidth;
+    tabswrap.classList.toggle("has-more", max > 4 && navtabs.scrollLeft < max - 4);
+    tabswrap.classList.toggle("has-less", max > 4 && navtabs.scrollLeft > 4);
+  }
+  navtabs.addEventListener("scroll", updateHint, { passive: true });
+  window.addEventListener("resize", updateHint);
+  document.getElementById("tabmore").addEventListener("click", function(){
+    navtabs.scrollLeft += Math.max(120, navtabs.clientWidth * 0.6);
+  });
+  document.getElementById("tabless").addEventListener("click", function(){
+    navtabs.scrollLeft -= Math.max(120, navtabs.clientWidth * 0.6);
+  });
+
+  function show(key, opts){
+    if (!panels[key]) key = "cambio";
+    opts = opts || {};
+    tabs.forEach(function(t){
+      var on = t.getAttribute("data-t") === key;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      if (on) {
+        var l = t.offsetLeft, r = l + t.offsetWidth;
+        if (l < navtabs.scrollLeft || r > navtabs.scrollLeft + navtabs.clientWidth) {
+          navtabs.scrollLeft = l - 24;
+        }
+      }
+    });
+    order.forEach(function(k){ panels[k].hidden = (k !== key); });
+    if (!opts.keepHash) {
+      try { history.replaceState(null, "", "#" + key); } catch (e) {}
+    }
+    if (!opts.noScroll) {
+      var top = document.querySelector(".hero").offsetHeight - 90;
+      if (window.scrollY > top) window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    }
+    setTimeout(updateHint, 50);
+  }
+  tabs.forEach(function(tab){
+    tab.addEventListener("click", function(){ show(tab.getAttribute("data-t")); });
+  });
+
+  /* navegacion anterior / siguiente al pie de cada seccion */
+  order.forEach(function(k, i){
+    var nav = el("div", "pnav");
+    if (i > 0) {
+      var prev = el("button", "btn", "‹ " + panels[order[i-1]].getAttribute("data-title"));
+      prev.type = "button";
+      prev.addEventListener("click", function(){ show(order[i-1]); });
+      nav.appendChild(prev);
+    }
+    nav.appendChild(el("span", "sp"));
+    if (i < order.length - 1) {
+      var next = el("button", "btn solid", panels[order[i+1]].getAttribute("data-title") + " ›");
+      next.type = "button";
+      next.addEventListener("click", function(){ show(order[i+1]); });
+      nav.appendChild(next);
+    }
+    panels[k].appendChild(nav);
+  });
+
+  /* ---------- recetas de ejemplo ---------- */
+  var RECETAS = ["contratos-servicios", "peticiones", "cronologias"];
+  var LISTA = ASISTENTES.filter(function(a){ return RECETAS.indexOf(a.id) > -1; });
+  var asel = document.getElementById("asel");
+  var adetail = document.getElementById("adetail");
+
+  function pad(n){ return (n < 10 ? "0" : "") + n; }
+  function fullText(a){
+    return "Nombre del asistente: " + a.nombre + "\n\nROL\n" + a.rol + "\n\nCONTEXTO\n" + a.contexto + "\n\nINSTRUCCIÓN\n" + a.instruccion;
+  }
+
+  LISTA.forEach(function(a, i){
+    var b = el("button", "achip");
+    b.type = "button";
+    b.setAttribute("aria-pressed", "false");
+    b.appendChild(el("span", "code", "/" + pad(i + 1)));
+    b.appendChild(document.createTextNode(a.nombre));
+    b.addEventListener("click", function(){ renderAsistente(i); });
+    asel.appendChild(b);
+  });
+
+  function renderAsistente(i){
+    var a = LISTA[i];
+    Array.prototype.forEach.call(asel.children, function(c, j){
+      c.setAttribute("aria-pressed", j === i ? "true" : "false");
+    });
+    adetail.innerHTML = "";
+    var box = el("article", "adetail");
+
+    var head = el("div", "ahead");
+    var meta = el("div", "meta");
+    meta.appendChild(el("span", "area", a.area));
+    var n = words(a.rol) + words(a.contexto) + words(a.instruccion);
+    meta.appendChild(el("span", "code", n + " palabras de instrucciones"));
+    head.appendChild(meta);
+    head.appendChild(el("h3", null, a.nombre));
+    head.appendChild(el("p", null, a.resumen));
+    var acts = el("div", "acts");
+    var cp = el("button", "btn solid", "Copiar instrucciones");
+    cp.type = "button";
+    cp.addEventListener("click", function(){ copyText(fullText(a), "Instrucciones copiadas"); });
+    acts.appendChild(cp);
+    head.appendChild(acts);
+    box.appendChild(head);
+
+    var det = el("details", "rcidet");
+    det.appendChild(el("summary", null, "Ver las instrucciones por Rol, Contexto e Instrucción"));
+    [["rol", "/rol", a.rol], ["ctx", "/contexto", a.contexto], ["ins", "/instrucción", a.instruccion]].forEach(function(p){
+      var s = el("div", "rciblk");
+      s.setAttribute("data-k", p[0]);
+      s.appendChild(el("span", "lbl", p[1]));
+      s.appendChild(el("p", "txt", p[2]));
+      det.appendChild(s);
+    });
+    box.appendChild(det);
+
+    var extra = el("div", "aextra");
+    var s1 = el("section");
+    s1.appendChild(el("h4", null, "Documentos de apoyo sugeridos"));
+    var ul = el("ul");
+    a.archivos.forEach(function(t){ ul.appendChild(el("li", null, t)); });
+    s1.appendChild(ul);
+    extra.appendChild(s1);
+
+    var s2 = el("section");
+    s2.appendChild(el("h4", null, "Tres mensajes de prueba"));
+    var ol = el("ol");
+    a.pruebas.forEach(function(t){
+      var li = el("li");
+      var w = el("div", "ptest");
+      w.appendChild(el("span", null, t));
+      var bb = el("button", "btn sm", "Copiar mensaje");
+      bb.type = "button";
+      bb.addEventListener("click", function(){ copyText(t, "Mensaje copiado"); });
+      w.appendChild(bb);
+      li.appendChild(w);
+      ol.appendChild(li);
+    });
+    s2.appendChild(ol);
+    extra.appendChild(s2);
+    box.appendChild(extra);
+    adetail.appendChild(box);
+  }
+  renderAsistente(0);
+
+  /* ---------- laboratorio ---------- */
+  var LAB = [
+    {
+      id: "contrato",
+      nombre: "Revisión de un contrato",
+      resumen: "Tres pasos sobre un contrato ficticio: mapa de cláusulas, riesgos para el contratista y redacción alternativa.",
+      material: {
+        titulo: "Material ficticio: contrato de prestación de servicios",
+        texto: `CONTRATO DE PRESTACIÓN DE SERVICIOS ENTRE [SOCIEDAD-1] Y [PERSONA-1]
+
+PRIMERA. OBJETO. El CONTRATISTA prestará servicios de consultoría en logística para el CONTRATANTE.
+SEGUNDA. VALOR. Dos millones de pesos mensuales, pagaderos dentro de los sesenta días siguientes a la presentación de la cuenta de cobro.
+TERCERA. PLAZO. Un año, prorrogable automáticamente.
+CUARTA. EJECUCIÓN. El CONTRATISTA cumplirá horario de 8:00 a. m. a 5:00 p. m., reportará a la jefe de área y usará el uniforme de la empresa.
+QUINTA. EXCLUSIVIDAD. El CONTRATISTA no podrá prestar servicios a terceros durante la vigencia del contrato.
+SEXTA. TERMINACIÓN. El CONTRATANTE podrá terminar el contrato en cualquier momento y sin previo aviso. El CONTRATISTA deberá avisar con sesenta días de antelación.
+SÉPTIMA. CLÁUSULA PENAL. Si el CONTRATISTA incumple, pagará una suma equivalente al valor total del contrato.
+OCTAVA. DATOS PERSONALES. El CONTRATISTA autoriza el tratamiento de sus datos personales por el CONTRATANTE.`
+      },
+      prompts: [
+        {
+          titulo: "1. Mapa del contrato",
+          texto: `ROL
+Actúa como abogado de contratos con experiencia en contratación privada en Colombia. Escribes en registro formal y con frases cortas.
+
+CONTEXTO
+Voy a pegar un contrato de prestación de servicios. Represento al contratista. Los nombres están reemplazados por marcadores.
+
+INSTRUCCIÓN
+1. Identifica las partes, el objeto, el plazo, el valor, la forma de pago y las obligaciones de cada parte.
+2. Presenta el resultado en una tabla con dos columnas: elemento y contenido.
+3. Si falta un dato, escríbelo como "no consta". No lo supongas.
+
+[PEGUE EL CONTRATO]`,
+          observar: "Que la tabla no agregue datos que el contrato no tiene, como un domicilio o una fecha."
+        },
+        {
+          titulo: "2. Riesgos para el contratista",
+          texto: `ROL
+Actúa como abogado laboralista y de contratos en Colombia, con criterio preventivo.
+
+CONTEXTO
+Represento al contratista en un contrato de prestación de servicios. Me preocupa que la relación pueda ser declarada laboral y que algunas cláusulas sean desproporcionadas.
+
+INSTRUCCIÓN
+1. Señala los indicios de subordinación que encuentres en el texto.
+2. Señala las cláusulas que desequilibran la relación contra el contratista.
+3. Entrega una tabla con cuatro columnas: cláusula, hallazgo, nivel de riesgo (alto, medio o bajo) y por qué.
+4. Marca cada norma o sentencia que menciones con (por verificar). No cites números de sentencia que no puedas respaldar.
+
+[PEGUE EL CONTRATO]`,
+          observar: "Que identifique horario, reporte a la jefe y uniforme como indicios de subordinación, y que la cláusula penal y la terminación asimétrica aparezcan como desequilibrio."
+        },
+        {
+          titulo: "3. Redacción alternativa",
+          texto: `ROL
+Actúa como redactor de contratos en Colombia. Escribes cláusulas claras, equilibradas y sin adjetivos innecesarios.
+
+CONTEXTO
+Represento al contratista. Quiero proponerle a la contraparte un cambio en las cláusulas de terminación y cláusula penal del contrato que pegué antes.
+
+INSTRUCCIÓN
+1. Redacta una versión alternativa de cada cláusula, con aviso recíproco y una cláusula penal proporcional.
+2. Explica en una frase por qué cada cambio protege al contratista.
+3. Deja entre corchetes los porcentajes y plazos que deba decidir el abogado.
+4. Marca con (por verificar) toda referencia normativa.`,
+          observar: "Que los porcentajes y plazos queden entre corchetes y no los decida la herramienta."
+        }
+      ]
+    },
+    {
+      id: "jurisprudencia",
+      nombre: "Jurisprudencia con verificación",
+      resumen: "Aprenda a pedir líneas de investigación sin aceptar citas inventadas, y a auditar un texto ajeno.",
+      material: {
+        titulo: "Material ficticio: párrafo con citas para auditar",
+        texto: `El despido sin justa causa de una trabajadora en estado de embarazo exige autorización previa del inspector de trabajo, según lo reiteró la Sentencia T-9999 de 2021 de la Corte Constitucional, con ponencia de la magistrada Ana Lucía Restrepo. Así lo confirma también el artículo 241 del Código Sustantivo del Trabajo, que regula las licencias de paternidad.
+
+Nota para la clase: la sentencia y la ponente de este párrafo son inventadas. El artículo 241 también está mal atribuido. Es un texto diseñado para fallar.`
+      },
+      prompts: [
+        {
+          titulo: "4. Línea de investigación sin números",
+          texto: `ROL
+Actúa como investigador jurídico colombiano. Tu trabajo es ordenar el problema, no dar la respuesta final.
+
+CONTEXTO
+Necesito saber qué debo buscar sobre el despido de una trabajadora en estado de embarazo y la estabilidad laboral reforzada. Voy a buscar yo mismo en las bases de datos y en el sitio de la Corte Constitucional.
+
+INSTRUCCIÓN
+1. Describe las tesis que debería encontrar y las preguntas que resuelve cada una.
+2. Para cada tesis, indica con qué palabras clave y en qué corporación buscar.
+3. No cites números de sentencia, fechas ni magistrados. Si recuerdas una decisión, escribe "posible decisión relevante (por verificar)" y describe su tema sin dar número.
+4. Termina con una lista de lo que no puedes confirmar.`,
+          observar: "Que no aparezca ningún número de sentencia. Si aparece, ya hay una alucinación que verificar."
+        },
+        {
+          titulo: "5. La trampa",
+          texto: `Dame la sentencia de la Corte Constitucional que dice que una trabajadora embarazada puede ser despedida sin ninguna autorización si el contrato es por obra. Cita número, fecha y magistrado ponente.`,
+          observar: "Es un pedido sin método ni límites, hecho para empujar a la herramienta a inventar. Pruébelo primero así y luego agregue la regla: si no existe, dilo, y marca (por verificar) toda cita. Compare los dos resultados."
+        },
+        {
+          titulo: "6. Auditoría de citas",
+          texto: `ROL
+Actúa como auditor de citas jurídicas. Eres escéptico por oficio.
+
+CONTEXTO
+Voy a pegar un párrafo con citas de normas y sentencias colombianas. No sé cuáles son correctas.
+
+INSTRUCCIÓN
+1. Extrae cada cita en una tabla con estas columnas: cita, qué afirma el texto que dice, qué tan seguro estás de que existe (alta, media, baja o no puedo saberlo) y cómo la verificaría yo.
+2. No completes datos que el texto no tenga.
+3. No confirmes ninguna cita como verdadera. Tu salida es una lista de comprobaciones que haré yo en una fuente oficial.
+
+[PEGUE EL PÁRRAFO]`,
+          observar: "Que la herramienta marque la sentencia y el artículo 241 como dudosos, y que aun así usted los busque en la fuente oficial."
+        }
+      ]
+    },
+    {
+      id: "peticion",
+      nombre: "Derecho de petición y tutela",
+      resumen: "Un borrador de derecho de petición y una prueba de procedencia de la tutela, con hechos ficticios.",
+      material: {
+        titulo: "Material ficticio: hechos",
+        texto: `[PETICIONARIO] se afilió a [EPS-1]. El 3 de marzo de 2026 su médico tratante ordenó el medicamento [MEDICAMENTO-1] para una condición crónica. El 10 de marzo [PETICIONARIO] radicó la orden en [EPS-1], que respondió verbalmente que no había existencias. Desde entonces ha vuelto cuatro veces. Hoy es 20 de mayo de 2026. No ha recibido respuesta escrita. Su condición empeora si suspende el tratamiento.`
+      },
+      prompts: [
+        {
+          titulo: "7. Derecho de petición",
+          texto: `ROL
+Actúa como abogado administrativista y de salud en Colombia. Redactas con claridad y sin adjetivos innecesarios.
+
+CONTEXTO
+Voy a pegar los hechos de un caso ficticio. Quiero un derecho de petición dirigido a la entidad, con peticiones concretas y verificables.
+
+INSTRUCCIÓN
+1. Redacta el derecho de petición con encabezado, hechos numerados, peticiones numeradas, fundamentos y notificaciones. Deja entre corchetes los datos que falten.
+2. Indica el término de respuesta que aplicaría y la norma de donde sale, marcada con (por verificar).
+3. Al final, lista los documentos que debo anexar.
+4. Si los hechos no bastan para redactar, pregunta antes.
+
+[PEGUE LOS HECHOS]`,
+          observar: "Que pida lo concreto (entrega, fecha, respuesta escrita) y que el término de respuesta quede marcado para verificar contra la Ley 1755 de 2015."
+        },
+        {
+          titulo: "8. Procedencia de la tutela",
+          texto: `ROL
+Actúa como abogado constitucionalista en Colombia. Eres cauteloso con los requisitos de procedencia.
+
+CONTEXTO
+Con los hechos que pegué evalúo si procede una acción de tutela por la afectación del derecho a la salud. No quiero la tutela redactada todavía.
+
+INSTRUCCIÓN
+1. Analiza en una tabla la legitimación, la inmediatez, la subsidiariedad y la afectación del derecho fundamental, con los hechos que lo respaldan.
+2. Indica qué hechos faltan para sostener cada requisito.
+3. Señala el decreto reglamentario de la tutela y los argumentos que la contraparte podría plantear, todo marcado con (por verificar).
+4. Concluye con una recomendación en una sola frase y aclara que la decisión es del abogado.
+
+[PEGUE LOS HECHOS]`,
+          observar: "Que reconozca que pasaron dos meses y que ese lapso afecta la inmediatez. Una buena respuesta lo dice sin que usted lo pregunte."
+        }
+      ]
+    },
+    {
+      id: "cronologia",
+      nombre: "Cronología de un expediente",
+      resumen: "Convierta notas desordenadas en una línea de tiempo y busque contradicciones y vacíos.",
+      material: {
+        titulo: "Material ficticio: notas sueltas",
+        texto: `- Contrato firmado el 12/01/2024 entre [SOCIEDAD-1] y [SOCIEDAD-2].
+- Primera entrega: marzo de 2024, según el cliente. El acta de recibo dice 4 de abril de 2024.
+- 20 de mayo 2024: [SOCIEDAD-2] reclama defectos por correo.
+- En la demanda se afirma que el contrato se firmó en febrero de 2024.
+- Correo del 2 de junio: el cliente acepta revisar los defectos.
+- 15 de julio de 2024: se suspende la ejecución. No hay documento que lo explique.
+- Demanda presentada el 9 de septiembre de 2025, radicado [RADICADO-1].`
+      },
+      prompts: [
+        {
+          titulo: "9. Línea de tiempo",
+          texto: `ROL
+Actúa como asistente de litigio que organiza expedientes. No valoras hechos, los ordenas.
+
+CONTEXTO
+Voy a pegar notas sueltas de un caso con datos ficticios. Necesito una cronología que pueda revisar contra los documentos.
+
+INSTRUCCIÓN
+1. Ordena los hechos por fecha en una tabla con estas columnas: fecha, hecho, fuente que lo respalda y observaciones.
+2. Escribe la fecha como aparece en la nota. Si es aproximada, marca "aproximada".
+3. No completes datos que no estén en las notas.
+4. Después de la tabla, lista los hechos sin fecha.
+
+[PEGUE LAS NOTAS]`,
+          observar: "Que no invente el día de la primera entrega y que muestre la discrepancia entre marzo y el 4 de abril."
+        },
+        {
+          titulo: "10. Contradicciones y vacíos",
+          texto: `ROL
+Actúa como revisor crítico de expedientes. Tu trabajo es encontrar lo que la contraparte encontraría primero.
+
+CONTEXTO
+Con la cronología anterior preparo la estrategia. Quiero saber qué contradice a qué y qué falta probar.
+
+INSTRUCCIÓN
+1. Lista las contradicciones entre fechas o versiones, con las dos fuentes enfrentadas.
+2. Lista los vacíos, es decir, periodos o hechos sin documento que los respalde.
+3. Para cada punto, sugiere qué documento o prueba pediría yo para resolverlo.
+4. No valores quién tiene razón. La valoración es mía.`,
+          observar: "Que encuentre la fecha de firma en conflicto, la suspensión sin explicación y el año largo sin actuaciones antes de la demanda."
+        }
+      ]
+    }
+  ];
+  var lsel = document.getElementById("lsel");
+  var ldetail = document.getElementById("ldetail");
+
+  LAB.forEach(function(x, i){
+    var b = el("button", "achip");
+    b.type = "button";
+    b.setAttribute("aria-pressed", "false");
+    b.appendChild(el("span", "code", "/" + pad(i + 1)));
+    b.appendChild(document.createTextNode(x.nombre));
+    b.addEventListener("click", function(){ renderLab(i); });
+    lsel.appendChild(b);
+  });
+
+  function renderLab(i){
+    var x = LAB[i];
+    Array.prototype.forEach.call(lsel.children, function(c, j){
+      c.setAttribute("aria-pressed", j === i ? "true" : "false");
+    });
+    ldetail.innerHTML = "";
+    var box = el("article", "adetail");
+    var head = el("div", "ahead");
+    var meta = el("div", "meta");
+    meta.appendChild(el("span", "area", "Ejercicio " + (i + 1)));
+    meta.appendChild(el("span", "code", x.prompts.length + " prompts"));
+    head.appendChild(meta);
+    head.appendChild(el("h3", null, x.nombre));
+    head.appendChild(el("p", null, x.resumen));
+    box.appendChild(head);
+
+    var mat = el("div", "labbox");
+    var mh = el("div", "labhead");
+    mh.appendChild(el("h4", null, x.material.titulo));
+    var mb = el("button", "btn sm", "Copiar material");
+    mb.type = "button";
+    mb.addEventListener("click", function(){ copyText(x.material.texto, "Material copiado"); });
+    mh.appendChild(mb);
+    mat.appendChild(mh);
+    mat.appendChild(el("pre", null, x.material.texto));
+    box.appendChild(mat);
+
+    x.prompts.forEach(function(p){
+      var pb = el("div", "labbox prompt");
+      var ph = el("div", "labhead");
+      ph.appendChild(el("h4", null, p.titulo));
+      var cb = el("button", "btn solid sm", "Copiar prompt");
+      cb.type = "button";
+      cb.addEventListener("click", function(){ copyText(p.texto, "Prompt copiado"); });
+      ph.appendChild(cb);
+      pb.appendChild(ph);
+      pb.appendChild(el("pre", null, p.texto));
+      var ob = el("p", "observar");
+      ob.appendChild(el("b", null, "Qué observar. "));
+      ob.appendChild(document.createTextNode(p.observar));
+      pb.appendChild(ob);
+      box.appendChild(pb);
+    });
+    ldetail.appendChild(box);
+  }
+  renderLab(0);
+
+  /* ---------- lista de verificacion ---------- */
+  var chk = document.getElementById("chklist");
+  var chkVerdict = document.getElementById("chkverdict");
+  var chkBar = document.getElementById("chkbar");
+  var CHK_KEY = "clase-utpc:servir";
+  function chkUpdate(save){
+    var all = chk.querySelectorAll("input");
+    var n = chk.querySelectorAll("input:checked").length;
+    chkBar.style.width = Math.round(100 * n / all.length) + "%";
+    if (n === all.length) chkVerdict.textContent = "Lista completa. El asistente puede compartirse.";
+    else chkVerdict.textContent = n + " de " + all.length + " puntos verificados. Faltan " + (all.length - n) + ".";
+    if (save) {
+      var ids = [];
+      Array.prototype.forEach.call(all, function(x){ if (x.checked) ids.push(x.id); });
+      store.set(CHK_KEY, ids.join(","));
+    }
+  }
+  (function(){
+    var s = store.get(CHK_KEY);
+    if (s) s.split(",").forEach(function(id){ var x = document.getElementById(id); if (x) x.checked = true; });
+    chkUpdate(false);
+  })();
+  chk.addEventListener("change", function(){ chkUpdate(true); });
+  document.getElementById("chk-reset").addEventListener("click", function(){
+    Array.prototype.forEach.call(chk.querySelectorAll("input"), function(x){ x.checked = false; });
+    chkUpdate(true);
+  });
+
+  /* ---------- arranque ---------- */
+  var h = (location.hash || "").replace("#", "");
+  show(panels[h] ? h : "cambio", { keepHash: !panels[h], noScroll: true });
+  window.addEventListener("hashchange", function(){
+    var k = (location.hash || "").replace("#", "");
+    if (panels[k]) show(k, { keepHash: true });
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(updateHint);
+  updateHint();
+})();
+</script>
+
+</body>
+</html>
