@@ -3,7 +3,8 @@
 
 - template.html   : marcado, estilos y logica (UTF-8, legible)
 - asistentes.js   : los asistentes de ejemplo (UTF-8, legible)
-- assets/         : tipografias .woff2 y logo, se incrustan en base64
+- prompts-*.js    : la biblioteca, un archivo por area (orden en AREAS_ORDER)
+- assets/         : tipografias .woff2 y logos de Next Leap y de la UPTC, se incrustan en base64
 
 El resultado es un unico archivo ASCII puro: fuera de <script> los caracteres
 no ASCII van como entidades HTML (&#NNNN;) y dentro de <script> como \\uXXXX.
@@ -13,7 +14,8 @@ Antes de escribir, revisa:
 - que la prosa no use guiones largos, punto y coma, signos de exclamacion
   ni las frases y conectores que la guia de redaccion excluye.
 
-Uso:  python3 src/build.py
+Uso:  python3 src/build.py            (avisa y omite los archivos de area que falten)
+      python3 src/build.py --estricto  (exige los 11 archivos, sus campos y al menos 100 prompts)
 """
 import base64, pathlib, re, sys
 
@@ -22,6 +24,10 @@ ROOT = SRC.parent
 OUT = ROOT / "index.html"
 
 MIN_WORDS, MAX_WORDS = 300, 600
+MIN_PROMPTS = 100
+AREAS_ORDER = ["civil", "comercial", "laboral", "penal", "administrativo", "constitucional",
+               "tributario", "ambiental", "digital", "internacional", "practica"]
+CAMPOS = ["a", "s", "t", "r", "c", "i", "mal", "por", "tip"]
 
 BANNED = [
     "—", "–", "!", "¡",
@@ -134,12 +140,54 @@ def check_template_prose(tpl):
     return problems
 
 
+def load_prompts(estricto):
+    """Une los archivos de area y revisa estructura y prosa de la biblioteca."""
+    parts, problems, total = [], [], 0
+    for a in AREAS_ORDER:
+        f = SRC / f"prompts-{a}.js"
+        if not f.exists():
+            if estricto:
+                problems.append(f"falta {f.name}")
+            else:
+                print(f"aviso: falta {f.name}, se omite")
+            continue
+        txt = f.read_text(encoding="utf-8").strip()
+        objs = re.findall(r"^\{a:\"([^\"]+)\"", txt, flags=re.M)
+        total += len(objs)
+        for k in set(objs):
+            if k != a:
+                problems.append(f"{f.name}: clave de area {k!r} distinta de {a!r}")
+        blocks = re.split(r"^\{a:", txt, flags=re.M)[1:]
+        for b in blocks:
+            titulo = re.search(r'\bt:"((?:[^"\\]|\\.)*)"', b)
+            nom = titulo.group(1)[:50] if titulo else "(sin titulo)"
+            for c in CAMPOS[1:]:
+                if not re.search(r'(?:^|[,{\s])' + c + r':"', b):
+                    problems.append(f"{f.name}: {nom!r} sin campo {c}")
+            for lit in re.findall(r'"((?:[^"\\\n]|\\.)*)"', b):
+                low = lit.lower().replace("\\n", " ")
+                for bad in BANNED:
+                    if bad in low:
+                        problems.append(f"{f.name}: {nom!r} contiene {bad!r}")
+                        break
+                else:
+                    if ";" in lit:
+                        problems.append(f"{f.name}: {nom!r} contiene punto y coma")
+        parts.append(txt)
+    if estricto and total < MIN_PROMPTS:
+        problems.append(f"la biblioteca tiene {total} prompts y se exigen al menos {MIN_PROMPTS}")
+    return "\n\n".join(parts), total, problems
+
+
 def main():
+    estricto = "--estricto" in sys.argv[1:]
     tpl = (SRC / "template.html").read_text(encoding="utf-8")
     js = (SRC / "asistentes.js").read_text(encoding="utf-8").strip()
+    prompts, n_prompts, prob_prompts = load_prompts(estricto)
 
     problems, report = check_assistants(js)
     problems += check_template_prose(tpl)
+    problems += prob_prompts
     if problems:
         print("revision de redaccion y extension:")
         for p in problems:
@@ -148,7 +196,9 @@ def main():
 
     html = (tpl.replace("{{FONT_CSS}}", font_css())
                .replace("{{LOGO_PNG}}", "data:image/png;base64," + b64(SRC / "assets" / "nextleap-mark.png"))
-               .replace("{{ASISTENTES}}", js))
+               .replace("{{UPTC_PNG}}", "data:image/png;base64," + b64(SRC / "assets" / "uptc-logo.png"))
+               .replace("{{ASISTENTES}}", js)
+               .replace("{{PROMPTS}}", prompts))
     left = re.findall(r"\{\{[A-Z_]+\}\}", html)
     if left:
         sys.exit(f"placeholders sin resolver: {left}")
@@ -157,7 +207,7 @@ def main():
     OUT.write_text(html, encoding="ascii")
 
     total = sum(n for _, n in report)
-    print(f"ok: {OUT} ({OUT.stat().st_size:,} bytes, {len(report)} asistentes, {total:,} palabras de instrucciones)")
+    print(f"ok: {OUT} ({OUT.stat().st_size:,} bytes, {n_prompts} prompts de biblioteca, {len(report)} asistentes, {total:,} palabras de instrucciones)")
     for name, n in report:
         print(f"  {n:4d}  {name}")
 

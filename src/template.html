@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>El derecho ya cambió, ¿y los abogados? | Next Leap</title>
-<meta name="description" content="Inteligencia artificial aplicada a la práctica jurídica. Material de clase de Next Leap para la UTPC.">
+<title>El derecho ya cambió, ¿y los abogados? | Taller UPTC</title>
+<meta name="description" content="Taller de inteligencia artificial aplicada a la práctica jurídica: método, laboratorio y biblioteca de más de cien prompts por área del derecho. Next Leap para la UPTC.">
 <link rel="icon" href="{{LOGO_PNG}}">
 </head>
 <body>
 <style>
 {{FONT_CSS}}
 
-/* Sistema visual de nextleap-site, el mismo de Prompts RCI y Agentes Cortex.
+/* Sistema visual de Next Leap con la paleta de la UPTC (rojo #b31b34, amarillo #ffcc29, negro).
    Hero tipografico, sin fotografia. */
 :root{
   --bg:#ffffff;
@@ -28,12 +28,27 @@
   --ink45:#85868f;
   --ink40:#8f9099;
   --ink20:#c4c5cc;
-  --rol:#2563eb;
-  --ctx:#9333ea;
-  --ins:#db2777;
+  --uptc:#b31b34;
+  --uptc-d:#8b1528;
+  --uptc-y:#ffcc29;
+  --rol:#b31b34;
+  --ctx:#a37800;
+  --ins:#111114;
   --ok:#16a34a;
   --warn:#b45309;
-  --grad:linear-gradient(135deg,#2563eb,#9333ea,#db2777);
+  --bad:#dc2626;
+  --grad:linear-gradient(135deg,#b31b34,#ffcc29,#111114);
+  --a-civil:#144382;
+  --a-comercial:#a37800;
+  --a-laboral:#1b8a76;
+  --a-penal:#8b1528;
+  --a-administrativo:#642f5b;
+  --a-constitucional:#d9622d;
+  --a-tributario:#0d2c56;
+  --a-ambiental:#00802b;
+  --a-digital:#1a78b0;
+  --a-internacional:#5a6069;
+  --a-practica:#b31b34;
   --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace;
 }
@@ -57,7 +72,13 @@ button{font-family:var(--sans)}
 @media(min-width:640px){.navbar{padding:11px 20px}}
 .brand{display:flex;align-items:center;gap:9px;flex:none;font-size:13px;font-weight:600;letter-spacing:-.01em}
 .brand .code{color:var(--ink40)}
-.brand .mk{height:22px;width:auto;flex:none;display:block}
+.brand .mk{height:24px;width:auto;flex:none;display:block}
+.brand .uptc{height:34px;width:auto;display:block;flex:none}
+@media(min-width:640px){.brand .uptc{height:42px;margin:-3px 0}}
+.brand .vdiv{width:1px;height:22px;background:var(--line);flex:none}
+.brand .brandtxt{font-size:12.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+@media(max-width:1180px){.brand .brandtxt{display:none}}
+@media(max-width:380px){.brand .mk,.brand .vdiv{display:none}}
 .tabs-wrap{position:relative;min-width:0;flex:0 1 auto;display:flex;align-items:center}
 .navtabs{display:flex;align-items:center;gap:2px;overflow-x:auto;scroll-behavior:smooth;
   scrollbar-width:thin;scrollbar-color:var(--ink20) transparent;padding-bottom:2px}
@@ -98,9 +119,9 @@ button{font-family:var(--sans)}
 @media(max-width:900px){.hero{padding-top:150px}}
 .hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(38% 52% at 16% 32%,rgba(37,99,235,.17),transparent 70%),
-    radial-gradient(36% 50% at 84% 24%,rgba(147,51,234,.15),transparent 70%),
-    radial-gradient(44% 58% at 58% 92%,rgba(219,39,119,.13),transparent 72%),
+    radial-gradient(38% 52% at 16% 32%,rgba(179,27,52,.17),transparent 70%),
+    radial-gradient(36% 50% at 84% 24%,rgba(17,17,20,.09),transparent 70%),
+    radial-gradient(44% 58% at 58% 92%,rgba(255,204,41,.24),transparent 72%),
     var(--bg)}
 .hero-grid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.7;
   background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
@@ -339,7 +360,10 @@ h1 .b{display:block;margin-top:11px;color:var(--ink55)}
 
 footer{margin-top:40px;border-top:1px solid var(--line);padding:26px 0 48px;display:flex;gap:20px;
   justify-content:space-between;flex-wrap:wrap;align-items:flex-start}
-.footmark{height:30px;width:auto;display:block;opacity:.85;margin-bottom:12px}
+.footbrands{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.footuptc{height:44px;width:auto;display:block}
+.footmark{height:30px;width:auto;display:block;opacity:.85}
+.hdiv{width:1px;height:34px;background:var(--line);flex:none}
 .note{max-width:62ch;font-size:12px;color:var(--ink45);line-height:1.65;margin:0}
 .note strong{color:var(--ink60);font-weight:600}
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);opacity:0;pointer-events:none;
@@ -354,6 +378,116 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:26px 0 48px;disp
   .hero{padding-top:20px}
 }
 
+/* Filtros */
+.filters{position:sticky;top:70px;z-index:40;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:10px;margin-bottom:20px}
+@media(max-width:900px){.filters{position:static}}
+.filters-in{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.searchrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search{flex:1 1 240px;display:flex;align-items:center;gap:9px;border:1px solid var(--line);
+  background:var(--surface);border-radius:6px;padding:7px 11px;transition:border-color .15s,background .15s}
+.search:focus-within{border-color:var(--line-h);background:var(--bg)}
+.search input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);
+  font-family:var(--sans);font-size:13px;outline:none}
+.search input::placeholder{color:var(--ink40)}
+.search .k{font-family:var(--mono);font-size:10px;color:var(--ink40);border:1px solid var(--line);
+  border-radius:3px;padding:1px 5px}
+.count{font-family:var(--mono);font-size:11px;color:var(--ink40);white-space:nowrap;font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:5px 10px;
+  font-family:var(--sans);font-size:12px;font-weight:500;color:var(--ink55);display:inline-flex;align-items:center;gap:7px;
+  transition:background .15s,color .15s,border-color .15s}
+.chip:hover{background:var(--surface-h);border-color:var(--line-h);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.subchips{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.subchips[hidden]{display:none}
+.subchips .chip{font-size:11.5px;padding:4px 9px}
+.chip .n{font-family:var(--mono);font-size:9.5px;color:var(--ink40);margin-left:5px}
+.chip[aria-pressed="true"] .n{color:rgba(255,255,255,.6)}
+.chip .code{color:var(--ink40)}
+.chip[aria-pressed="true"] .code{color:rgba(255,255,255,.55)}
+.dot{width:7px;height:7px;border-radius:99px;flex:none;background:var(--ac,var(--ink20))}
+.chip[aria-pressed="true"] .dot{box-shadow:0 0 0 1.5px rgba(255,255,255,.7)}
+
+/* Tarjetas */
+.grid{display:grid;gap:16px;grid-template-columns:repeat(2,1fr)}
+.grid.compact{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
+@media (max-width:960px){.grid,.grid.compact{grid-template-columns:1fr}}
+.card{position:relative;border:1px solid var(--line);background:var(--bg);border-radius:8px;
+  display:flex;flex-direction:column;overflow:hidden;animation:fade .28s ease-out both;
+  transition:background .2s,border-color .2s,box-shadow .2s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card:hover{border-color:var(--line-h);box-shadow:0 2px 4px rgba(0,0,0,.03),0 12px 28px -14px rgba(0,0,0,.18)}
+.card::after{content:"";position:absolute;inset:0;background:var(--grad);opacity:0;
+  transition:opacity .3s;pointer-events:none}
+.card:hover::after{opacity:.035}
+.card>*{position:relative;z-index:1}
+.card.compact{cursor:pointer}
+.chead{padding:14px 16px 12px;display:flex;flex-direction:column;gap:8px}
+.crow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.crow .left{display:flex;align-items:center;gap:9px;min-width:0}
+.card{border-top:2px solid var(--ac,var(--line))}
+.card .carea{color:var(--ac,var(--ink45))}
+.carea{font-size:11px;color:var(--ink45);text-transform:uppercase;letter-spacing:.1em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctools{display:flex;align-items:center;gap:3px;flex:none}
+.ico{background:none;border:0;cursor:pointer;color:var(--ink20);padding:3px;border-radius:4px;
+  display:inline-flex;transition:color .15s,background .15s}
+.ico:hover{color:var(--ink60);background:rgba(0,0,0,.05)}
+.ico.on{color:var(--warn)}
+.card h3{margin:0;font-size:14.5px;font-weight:600;letter-spacing:-.012em;line-height:1.35;text-wrap:balance}
+.blocks{display:flex;flex-direction:column;flex:1}
+.blk{padding:11px 16px 12px;border-top:1px solid var(--line)}
+.blk[data-k="rol"]{--bc:var(--rol)}
+.blk[data-k="ctx"]{--bc:var(--ctx)}
+.blk[data-k="ins"]{--bc:var(--ins)}
+.blabel{font-family:var(--mono);font-size:10px;color:var(--bc);letter-spacing:.04em;display:block;margin-bottom:6px}
+.btext{margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.75;color:var(--ink75);
+  white-space:pre-wrap;border-left:2px solid var(--surface-h);padding-left:11px}
+.card.compact .btext{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.v{color:var(--bc);background:color-mix(in srgb,var(--bc) 11%,transparent);border-radius:2px;padding:0 3px;
+  outline:none;border-bottom:1px dashed color-mix(in srgb,var(--bc) 45%,transparent);transition:background .15s}
+.v:hover{background:color-mix(in srgb,var(--bc) 18%,transparent)}
+.v:focus{background:color-mix(in srgb,var(--bc) 24%,transparent);border-bottom-style:solid}
+.cfoot{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border-top:1px solid var(--line);background:var(--surface-2)}
+.tip{font-size:11.5px;color:var(--ink45);line-height:1.45}
+.acts{display:flex;gap:6px;flex:none}
+.more{font-family:var(--mono);font-size:10px;color:var(--ink40)}
+
+/* Antes */
+.antes{padding:12px 16px;border-top:1px solid var(--line);background:rgba(220,38,38,.045);
+  display:flex;flex-direction:column;gap:7px}
+.antes .code{color:var(--bad)}
+.antes .q{margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--ink75)}
+.antes .why{margin:0;font-size:12px;line-height:1.5;color:var(--ink55)}
+.antes .why b{color:var(--bad);font-weight:600}
+
+/* Dialogo */
+dialog{border:0;padding:0;background:transparent;max-width:min(900px,94vw);width:100%}
+dialog::backdrop{background:rgba(0,0,0,.4);backdrop-filter:blur(3px)}
+.sheet{background:var(--bg);border-radius:12px;overflow:hidden;
+  box-shadow:inset 0 0 0 1px var(--line),0 32px 80px rgba(0,0,0,.28)}
+.shead{padding:18px 22px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  border-bottom:1px solid var(--line)}
+.shead h3{margin:6px 0 0;font-size:19px;font-weight:600;letter-spacing:-.02em}
+.sbody{max-height:62vh;overflow:auto}
+.sheet .blk{padding:17px 22px}
+.sheet .btext{font-size:13.5px;line-height:1.8}
+.sfoot{padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-top:1px solid var(--line);background:var(--surface-2)}
+
+
+.btn[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.done{background:rgba(22,163,74,.10);border-color:rgba(22,163,74,.45);color:var(--ok)}
+.btn svg{flex:none}
+.btn.sq{padding:7px 8px}
+.empty{padding:48px 0;text-align:center;color:var(--ink40);font-size:13px}
+.empty[hidden]{display:none}
+.linkbox .acts{padding:12px 14px;flex-wrap:wrap}
+.linkbox .acts .btn .n{font-family:var(--mono);font-size:10px;color:var(--ink40)}
+.linkbox p{margin:0;padding:12px 14px 0;font-size:13px;color:var(--ink60)}
+
 /* Laboratorio */
 .labbox{border:1px solid var(--line);border-radius:10px;margin:14px 0;overflow:hidden;background:var(--bg)}
 .labbox.prompt{border-color:var(--line-h)}
@@ -366,15 +500,16 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:26px 0 48px;disp
 
 <div class="nav">
   <div class="navbar">
-    <div class="brand"><img class="mk" src="{{LOGO_PNG}}" alt="Next Leap" width="22" height="21"><span class="code">/clase-utpc</span>IA aplicada</div>
+    <div class="brand"><img class="uptc" src="{{UPTC_PNG}}" alt="Universidad Pedagógica y Tecnológica de Colombia" width="84" height="40"><span class="vdiv"></span><img class="mk" src="{{LOGO_PNG}}" alt="Next Leap" width="25" height="24"><span class="brandtxt">Next Leap para la UPTC</span></div>
     <div class="tabs-wrap" id="tabswrap">
       <button class="tabmore left" id="tabless" type="button" aria-label="Ver secciones anteriores" tabindex="-1">&lsaquo;</button>
       <div class="navtabs" role="tablist" id="navtabs" aria-label="Secciones">
         <button class="navtab" role="tab" data-t="cambio" aria-selected="true"><span class="code">/1</span>El cambio</button>
         <button class="navtab" role="tab" data-t="metodo" aria-selected="false"><span class="code">/2</span>Método RCI</button>
         <button class="navtab" role="tab" data-t="laboratorio" aria-selected="false"><span class="code">/3</span>Laboratorio</button>
-        <button class="navtab" role="tab" data-t="asistentes" aria-selected="false"><span class="code">/4</span>Asistentes</button>
-        <button class="navtab" role="tab" data-t="servir" aria-selected="false"><span class="code">/5</span>Antes de servir</button>
+        <button class="navtab" role="tab" data-t="biblioteca" aria-selected="false"><span class="code">/4</span>Biblioteca</button>
+        <button class="navtab" role="tab" data-t="asistentes" aria-selected="false"><span class="code">/5</span>Asistentes</button>
+        <button class="navtab" role="tab" data-t="servir" aria-selected="false"><span class="code">/6</span>Antes de servir</button>
       </div>
       <button class="tabmore" id="tabmore" type="button" aria-label="Ver más secciones" tabindex="-1">&rsaquo;</button>
     </div>
@@ -387,17 +522,18 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:26px 0 48px;disp
   <div class="hero-glyph" aria-hidden="true">R&middot;C&middot;I</div>
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="wrap"><div class="hero-in">
-    <p class="eyebrow">/clase &middot; UTPC &middot; 2 horas</p>
+    <p class="eyebrow">/taller &middot; UPTC &middot; 2 horas</p>
     <h1>
       <span class="a">El derecho ya cambió, ¿y los abogados?</span>
       <span class="b">Inteligencia artificial aplicada. La herramienta redacta. El criterio y la firma siguen siendo suyos.</span>
     </h1>
-    <p class="sub">Guía de clase para abogados en ejercicio y estudiantes de posgrado. Qué cambió, cómo se pide bien, diez prompts para practicar y cómo se verifica antes de firmar.</p>
+    <p class="sub">Taller para abogados en ejercicio y estudiantes de posgrado. Qué cambió, cómo se pide bien, diez prompts para practicar, una biblioteca de más de cien prompts por área y subárea del derecho, y cómo se verifica antes de firmar.</p>
     <div class="rci-strip" aria-hidden="true">
       <span class="rci-pill r"><b>R</b> rol</span>
       <span class="rci-pill c"><b>C</b> contexto</span>
       <span class="rci-pill i"><b>I</b> instrucción</span>
-      <span class="rci-pill"><b>10</b> prompts</span>
+      <span class="rci-pill"><b>10</b> de práctica</span>
+      <span class="rci-pill"><b id="n-prompts">122</b> en la biblioteca</span>
     </div>
   </div></div>
 </header>
@@ -554,7 +690,32 @@ INSTRUCCIÓN
     <div id="ldetail"></div>
   </section>
 
-  <!-- /4 ASISTENTES -->
+  <!-- /4 BIBLIOTECA -->
+  <section class="panel" id="p-biblioteca" data-title="Biblioteca" hidden>
+    <div class="sechead">
+      <p class="eyebrow">/biblioteca</p>
+      <h2>Más de cien prompts por área y subárea del derecho</h2>
+      <p>Elija el área, afine por subárea o busque por palabra clave. Los campos entre corchetes se editan en la tarjeta: cámbielos por los datos del caso y copie el prompt. Todos trabajan con información anonimizada y marcan con (por verificar) cada cita de norma o sentencia.</p>
+    </div>
+    <div class="filters" id="filters">
+      <div class="filters-in">
+        <div class="searchrow">
+          <div class="search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="q" type="search" placeholder="Buscar por tarea, área o palabra clave" aria-label="Buscar prompts">
+            <span class="k">/</span>
+          </div>
+          <span class="count" id="count"></span>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Filtrar por área"></div>
+        <div class="chips subchips" id="subchips" role="group" aria-label="Filtrar por subárea" hidden></div>
+      </div>
+    </div>
+    <div class="grid compact" id="grid"></div>
+    <p class="empty" id="empty" hidden>Sin resultados. Pruebe otra palabra o quite el filtro.</p>
+  </section>
+
+  <!-- /5 ASISTENTES -->
   <section class="panel" id="p-asistentes" data-title="Asistentes" hidden>
     <div class="sechead">
       <p class="eyebrow">/asistentes</p>
@@ -571,7 +732,7 @@ INSTRUCCIÓN
     <div id="adetail"></div>
   </section>
 
-  <!-- /5 ANTES DE SERVIR -->
+  <!-- /6 ANTES DE SERVIR -->
   <section class="panel" id="p-servir" data-title="Antes de servir" hidden>
     <div class="sechead">
       <p class="eyebrow">/antes-de-servir</p>
@@ -621,13 +782,233 @@ INSTRUCCIÓN
 
 <footer class="wrap">
   <div>
-    <img class="footmark" src="{{LOGO_PNG}}" alt="Next Leap" width="31" height="30">
-    <p class="note"><strong>Next Leap</strong> &middot; Clase para abogados, UTPC<br>El derecho ya cambió, ¿y los abogados? Inteligencia artificial aplicada<br><span class="code">5 secciones / 10 prompts / 3 asistentes</span></p>
+    <div class="footbrands">
+      <img class="footuptc" src="{{UPTC_PNG}}" alt="Universidad Pedagógica y Tecnológica de Colombia" width="74" height="36">
+      <span class="hdiv"></span>
+      <img class="footmark" src="{{LOGO_PNG}}" alt="Next Leap" width="31" height="30">
+    </div>
+    <p class="note"><strong>Next Leap para la UPTC</strong> &middot; Taller para abogados<br>El derecho ya cambió, ¿y los abogados? Inteligencia artificial aplicada<br><span class="code" id="foot-count">6 secciones</span><br><span class="code">El escudo y el logotipo son de la UPTC y se usan con fines académicos.</span></p>
   </div>
-  <p class="note">Material educativo. Los ejemplos son modelos de trabajo y no constituyen asesoría jurídica. Las normas y decisiones mencionadas deben verificarse en su versión oficial vigente. Los productos mencionados pertenecen a sus respectivos titulares y sus funciones cambian con el tiempo.</p>
+  <p class="note"><strong>Manejo de información.</strong> Los prompts trabajan con información anonimizada. Antes de pegar contenido en una herramienta de IA, reemplace nombres, cédulas, NIT, radicados y datos de contacto por marcadores genéricos. No pegue documentos con reserva legal ni información amparada por el secreto profesional. Use las herramientas que autorice su firma o entidad.<br><br><strong>Verificación de citas.</strong> Los modelos de lenguaje inventan normas, artículos y sentencias con apariencia verosímil. Verifique cada cita en la fuente oficial antes de usarla. La salida es un borrador. El concepto jurídico y la decisión son del abogado responsable.<br><br>Material educativo. Los ejemplos son modelos de trabajo y no constituyen asesoría jurídica. Los productos mencionados pertenecen a sus respectivos titulares y sus funciones cambian con el tiempo.</p>
 </footer>
 
+<dialog id="dlg"><div class="sheet" id="sheet"></div></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const AREAS=[["civil","Civil, procesal y familia"],["comercial","Comercial, societario y consumo"],
+["laboral","Laboral y seguridad social"],["penal","Penal"],
+["administrativo","Administrativo y contratación estatal"],["constitucional","Constitucional y derechos humanos"],
+["tributario","Tributario y aduanero"],["ambiental","Ambiental, agrario y minero-energético"],
+["digital","Datos, tecnología y propiedad intelectual"],["internacional","Internacional y arbitraje"],
+["practica","Práctica profesional y ética"]];
+
+const PROMPTS=[
+{{PROMPTS}}
+];
+</script>
+
+<script>
+(function(){
+"use strict";
+const el=s=>document.querySelector(s), els=s=>[...document.querySelectorAll(s)];
+const AREA_NAME=Object.fromEntries(AREAS);
+const AREA_CODE=Object.fromEntries(AREAS.map(([k],i)=>[k,i+1]));
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const KLAB={rol:"/rol",ctx:"/contexto",ins:"/instrucción"};
+const CODES=(()=>{const n={};return PROMPTS.map(p=>{n[p.a]=(n[p.a]||0)+1;return `/${AREA_CODE[p.a]}.${n[p.a]}`})})();
+/* Estado editable: toda copia sale de aqui, no del DOM */
+const STATE=PROMPTS.map(p=>({rol:p.r,ctx:p.c,ins:p.i}));
+
+let toastT;
+function toast(m){const t=el("#toast");t.textContent=m;t.classList.add("show");
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),1900)}
+async function copiar(texto,btn){
+  let ok=false;
+  try{await navigator.clipboard.writeText(texto);ok=true}
+  catch(e){
+    const ta=document.createElement("textarea");
+    ta.value=texto;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();
+    try{ok=document.execCommand("copy")}catch(_){ok=false}
+    document.body.removeChild(ta);
+  }
+  toast(ok?"Prompt copiado":"No se pudo copiar: seleccione el texto");
+  if(btn){const o=btn.innerHTML;btn.innerHTML=ok?"Copiado":"Copia manual";btn.classList.toggle("done",ok);
+    setTimeout(()=>{btn.innerHTML=o;btn.classList.remove("done")},1600)}
+}
+const armar=i=>`ROL\n${STATE[i].rol}\n\nCONTEXTO\n${STATE[i].ctx}\n\nINSTRUCCIÓN\n${STATE[i].ins}`;
+
+/* ══ BIBLIOTECA ══ */
+let filtro="todas", sub="", query="";
+const favs=new Set();
+try{JSON.parse(localStorage.getItem("rci-uptc-favs")||"[]").forEach(i=>favs.add(i))}catch(e){}
+const saveFavs=()=>{try{localStorage.setItem("rci-uptc-favs",JSON.stringify([...favs]))}catch(e){}};
+
+const marcar=t=>esc(t).replace(/\[([^\]]+)\]/g,(_,v)=>`<span class="v" contenteditable="true" spellcheck="false">${v}</span>`);
+const bloques=(i,editable)=>["rol","ctx","ins"].map(k=>
+  `<div class="blk" data-k="${k}"><span class="blabel">${KLAB[k]}</span><p class="btext"${editable?' data-edit':''}>${editable?marcar(STATE[i][k]):esc(STATE[i][k])}</p></div>`).join("");
+
+function tarjeta(p,i,d){
+  const c=document.createElement("article");
+  c.className="card compact"; c.dataset.idx=i; c.style.animationDelay=(d||0)+"ms";
+  c.style.setProperty("--ac",`var(--a-${p.a})`);
+  const largo=STATE[i].rol.length+STATE[i].ctx.length+STATE[i].ins.length;
+  c.innerHTML=`
+  <div class="chead">
+    <div class="crow">
+      <div class="left"><span class="code">${CODES[i]}</span><span class="carea">${AREA_NAME[p.a]}${p.s?" · "+esc(p.s):""}</span></div>
+      <div class="ctools">
+        <button class="ico ${favs.has(i)?"on":""}" data-act="fav" aria-label="Favorito" title="Favorito">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="${favs.has(i)?"currentColor":"none"}" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>
+        </button>
+        <button class="ico" data-act="zoom" aria-label="Ampliar" title="Abrir y editar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg>
+        </button>
+      </div>
+    </div>
+    <h3>${esc(p.t)}</h3>
+  </div>
+  <div class="blocks">${bloques(i,false)}</div>
+  <div class="cfoot">
+    <span class="more">${largo} caracteres · abrir para editar</span>
+    <div class="acts">
+      <button class="btn sq" data-act="reset" aria-label="Restablecer" title="Restablecer campos">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+      <button class="btn" data-act="copy">Copiar</button>
+    </div>
+  </div>`;
+  return c;
+}
+function render(){
+  const g=el("#grid"); g.innerHTML="";
+  const q=query.trim().toLowerCase(); let n=0;
+  PROMPTS.forEach((p,i)=>{
+    const okA=filtro==="todas"||(filtro==="favs"?favs.has(i):p.a===filtro&&(!sub||p.s===sub));
+    const txt=(p.t+" "+AREA_NAME[p.a]+" "+(p.s||"")+" "+STATE[i].rol+" "+STATE[i].ctx+" "+STATE[i].ins).toLowerCase();
+    if(okA&&(!q||txt.includes(q))){g.appendChild(tarjeta(p,i,Math.min(n,12)*20));n++}
+  });
+  el("#empty").hidden=n>0;
+  el("#count").textContent=n===PROMPTS.length?`${PROMPTS.length} prompts`:`${n} / ${PROMPTS.length}`;
+}
+const cuenta=f=>PROMPTS.filter(f).length;
+function subchips(){
+  const c=el("#subchips");
+  const subs=filtro==="todas"||filtro==="favs"?[]:[...new Set(PROMPTS.filter(p=>p.a===filtro).map(p=>p.s||"General"))];
+  c.hidden=subs.length<2; c.innerHTML="";
+  if(c.hidden) return;
+  [["","Todas las subáreas",cuenta(p=>p.a===filtro)],...subs.map(x=>[x,x,cuenta(p=>p.a===filtro&&(p.s||"General")===x)])].forEach(([k,label,n])=>{
+    const b=document.createElement("button");
+    b.className="chip"; b.type="button"; b.dataset.s=k;
+    b.innerHTML=esc(label)+`<span class="n">${n}</span>`;
+    b.setAttribute("aria-pressed",String(k===sub)); c.appendChild(b);
+  });
+}
+function chips(){
+  const c=el("#chips");
+  [["todas","Todas",""],...AREAS.map(([k,l])=>[k,l,"/"+AREA_CODE[k]])].forEach(([k,label,code])=>{
+    const b=document.createElement("button");
+    b.className="chip"; b.type="button"; b.dataset.k=k;
+    const n=k==="todas"?PROMPTS.length:cuenta(p=>p.a===k);
+    b.innerHTML=(code?`<span class="dot" style="--ac:var(--a-${k})"></span><span class="code">${code}</span>`:"")+label+`<span class="n">${n}</span>`;
+    b.setAttribute("aria-pressed",String(k===filtro)); c.appendChild(b);
+  });
+  const f=document.createElement("button");
+  f.className="chip"; f.type="button"; f.dataset.k="favs";
+  f.innerHTML=`<span class="code">/fav</span>Favoritos <span class="code" id="fav-n">${favs.size}</span>`;
+  f.setAttribute("aria-pressed","false"); c.appendChild(f);
+  c.addEventListener("click",e=>{
+    const b=e.target.closest(".chip"); if(!b) return;
+    filtro=b.dataset.k; sub="";
+    c.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.k===filtro)));
+    subchips(); render();
+  });
+  el("#subchips").addEventListener("click",e=>{
+    const b=e.target.closest(".chip"); if(!b) return;
+    sub=b.dataset.s;
+    el("#subchips").querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.s===sub)));
+    render();
+  });
+}
+/* Editar en linea (vista completa) sincroniza STATE */
+el("#grid").addEventListener("input",e=>{
+  const t=e.target.closest(".btext[data-edit]"); if(!t) return;
+  const card=t.closest(".card"), k=t.closest(".blk").dataset.k;
+  STATE[+card.dataset.idx][k]=t.innerText.trim();
+});
+el("#grid").addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");
+  if(!b){
+    const card=e.target.closest(".card.compact");
+    if(card&&!e.target.closest(".btext[data-edit]")) abrir(+card.dataset.idx);
+    return;
+  }
+  const card=b.closest(".card"), idx=+card.dataset.idx, a=b.dataset.act;
+  if(a==="copy") copiar(armar(idx),b);
+  else if(a==="reset"){
+    STATE[idx]={rol:PROMPTS[idx].r,ctx:PROMPTS[idx].c,ins:PROMPTS[idx].i};
+    card.querySelector(".blocks").innerHTML=bloques(idx,false); toast("Campos restablecidos");
+  }
+  else if(a==="fav"){
+    favs.has(idx)?favs.delete(idx):favs.add(idx); saveFavs();
+    const n=el("#fav-n"); if(n) n.textContent=favs.size; render();
+    toast(favs.has(idx)?"Añadido a favoritos":"Quitado de favoritos");
+  }
+  else if(a==="zoom") abrir(idx);
+});
+function abrir(idx){
+  const p=PROMPTS[idx];
+  el("#sheet").innerHTML=`
+  <div class="shead">
+    <div><span class="code">${CODES[idx]} · ${AREA_NAME[p.a]}${p.s?" · "+esc(p.s):""}</span><h3>${esc(p.t)}</h3></div>
+    <button class="btn sq" data-close aria-label="Cerrar">✕</button>
+  </div>
+  ${p.mal?`<div class="antes"><span class="code">/antes</span><p class="q">"${esc(p.mal)}"</p><p class="why"><b>Falla porque:</b> ${esc(p.por||"")}</p></div>`:""}
+  <div class="sbody" data-idx="${idx}">${bloques(idx,true)}</div>
+  <div class="sfoot"><span class="tip">${esc(p.tip||"")}</span>
+    <div class="acts"><button class="btn" data-reset>Restablecer</button><button class="btn solid" data-copy>Copiar prompt</button></div>
+  </div>`;
+  el("#dlg").showModal();
+}
+el("#dlg").addEventListener("input",e=>{
+  const t=e.target.closest(".btext[data-edit]"); if(!t) return;
+  const idx=+el(".sbody").dataset.idx, k=t.closest(".blk").dataset.k;
+  STATE[idx][k]=t.innerText.trim();
+});
+el("#dlg").addEventListener("click",e=>{
+  const idx=el(".sbody")?+el(".sbody").dataset.idx:-1;
+  if(e.target.closest("[data-close]")||e.target.id==="dlg"){ el("#dlg").close(); render(); return; }
+  if(e.target.closest("[data-copy]")) copiar(armar(idx),e.target.closest("[data-copy]"));
+  if(e.target.closest("[data-reset]")){
+    STATE[idx]={rol:PROMPTS[idx].r,ctx:PROMPTS[idx].c,ins:PROMPTS[idx].i};
+    el(".sbody").innerHTML=bloques(idx,true); toast("Campos restablecidos");
+  }
+});
+
+/* Enlaces desde el laboratorio y atajos */
+function irA(a,s){
+  filtro=a; sub=s||""; query=""; el("#q").value="";
+  els("#chips .chip").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.k===filtro)));
+  subchips(); render();
+  if(window.UPTC_show) window.UPTC_show("biblioteca");
+}
+document.addEventListener("ir-biblioteca",e=>irA(e.detail.a,e.detail.s));
+window.UPTC_count=(a,s)=>PROMPTS.filter(p=>p.a===a&&(!s||p.s===s)).length;
+document.addEventListener("keydown",e=>{
+  if(e.key==="/"&&!/^(INPUT|TEXTAREA)$/.test(e.target.tagName)&&!e.target.isContentEditable){
+    e.preventDefault();
+    if(window.UPTC_show) window.UPTC_show("biblioteca",{noScroll:true});
+    el("#q").focus();
+  }
+});
+chips(); render();
+const NAR=new Set(PROMPTS.map(p=>p.a)).size, NSUB=new Set(PROMPTS.map(p=>p.a+"|"+(p.s||""))).size;
+el("#foot-count").textContent=`6 secciones / ${PROMPTS.length} prompts / ${NAR} áreas / ${NSUB} subáreas`;
+el("#n-prompts").textContent=PROMPTS.length;
+el("#q").addEventListener("input",e=>{query=e.target.value;render()});
+})();
+</script>
 
 <script>
 {{ASISTENTES}}
@@ -724,6 +1105,7 @@ INSTRUCCIÓN
     }
     setTimeout(updateHint, 50);
   }
+  window.UPTC_show = show;
   tabs.forEach(function(tab){
     tab.addEventListener("click", function(){ show(tab.getAttribute("data-t")); });
   });
@@ -836,6 +1218,7 @@ INSTRUCCIÓN
   var LAB = [
     {
       id: "contrato",
+      biblio: [["comercial","Contratos comerciales"],["laboral","Contrato individual y terminación"],["civil","Obligaciones y contratos civiles"]],
       nombre: "Revisión de un contrato",
       resumen: "Tres pasos sobre un contrato ficticio: mapa de cláusulas, riesgos para el contratista y redacción alternativa.",
       material: {
@@ -904,6 +1287,7 @@ INSTRUCCIÓN
     },
     {
       id: "jurisprudencia",
+      biblio: [["practica","Investigación jurídica y verificación de fuentes"],["digital","Uso de inteligencia artificial en el despacho"]],
       nombre: "Jurisprudencia con verificación",
       resumen: "Aprenda a pedir líneas de investigación sin aceptar citas inventadas, y a auditar un texto ajeno.",
       material: {
@@ -953,6 +1337,7 @@ INSTRUCCIÓN
     },
     {
       id: "peticion",
+      biblio: [["administrativo","Derecho de petición y silencio administrativo"],["constitucional","Acción de tutela"]],
       nombre: "Derecho de petición y tutela",
       resumen: "Un borrador de derecho de petición y una prueba de procedencia de la tutela, con hechos ficticios.",
       material: {
@@ -998,6 +1383,7 @@ INSTRUCCIÓN
     },
     {
       id: "cronologia",
+      biblio: [["practica","Gestión del despacho"],["civil","Procesal civil y CGP"]],
       nombre: "Cronología de un expediente",
       resumen: "Convierta notas desordenadas en una línea de tiempo y busque contradicciones y vacíos.",
       material: {
@@ -1102,6 +1488,26 @@ INSTRUCCIÓN
       pb.appendChild(ob);
       box.appendChild(pb);
     });
+    if (x.biblio && window.UPTC_count) {
+      var lk = el("div", "labbox linkbox");
+      var lh = el("div", "labhead");
+      lh.appendChild(el("h4", null, "Siga en la Biblioteca"));
+      lk.appendChild(lh);
+      lk.appendChild(el("p", null, "Prompts más extensos sobre el mismo tipo de tarea, con otros datos y otras normas."));
+      var la = el("div", "acts");
+      x.biblio.forEach(function(par){
+        var n = window.UPTC_count(par[0], par[1]);
+        var bt = el("button", "btn", par[1] + " ");
+        bt.type = "button";
+        bt.appendChild(el("span", "n", "(" + n + ")"));
+        bt.addEventListener("click", function(){
+          document.dispatchEvent(new CustomEvent("ir-biblioteca", { detail: { a: par[0], s: par[1] } }));
+        });
+        la.appendChild(bt);
+      });
+      lk.appendChild(la);
+      box.appendChild(lk);
+    }
     ldetail.appendChild(box);
   }
   renderLab(0);
@@ -1110,7 +1516,7 @@ INSTRUCCIÓN
   var chk = document.getElementById("chklist");
   var chkVerdict = document.getElementById("chkverdict");
   var chkBar = document.getElementById("chkbar");
-  var CHK_KEY = "clase-utpc:servir";
+  var CHK_KEY = "clase-uptc:servir";
   function chkUpdate(save){
     var all = chk.querySelectorAll("input");
     var n = chk.querySelectorAll("input:checked").length;
